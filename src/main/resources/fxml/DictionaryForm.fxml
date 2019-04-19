@@ -14,7 +14,7 @@
                   <Font size="20.0" />
                </font>
             </Button>
-            <Button fx:id="btnTeachers" mnemonicParsing="false" prefHeight="180.0" prefWidth="180.0" text="Педагоги">
+            <Button fx:id="btnTeachers" mnemonicParsing="false" onAction="#btnTeacherOnClick" prefHeight="180.0" prefWidth="180.0" text="Педагоги">
                <font>
                   <Font size="20.0" />
                </font>

@@ -1,9 +1,7 @@
 package org.russianfeature;
 
-import com.hibernate.crud.operations.HibernateUtil;
 import com.utils.Config;
 import com.utils.EnumAction;
-import com.utils.ExcelReader;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,14 +9,14 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 
-import org.hibernate.Session;
-import org.hibernate.query.Query;
 import org.russianfeature.controllers.*;
+import org.russianfeature.controllers.dictionary.DictionaryListFormController;
+import org.russianfeature.controllers.dictionary.StudentEditFormController;
+import org.russianfeature.controllers.dictionary.StudentsListFormController;
 import org.russianfeature.model.Student;
+import org.russianfeature.model.Teacher;
 
 public class Main extends Application {
 
@@ -38,7 +36,6 @@ public class Main extends Application {
         showMainWorkPlace();
 
     }
-
 
     public static void main(String[] args) {
         launch(args);
@@ -266,7 +263,7 @@ public class Main extends Application {
         try {
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/fxml/StudentsListForm.fxml"));
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/StudentsListForm.fxml"));
             AnchorPane workPlace = (AnchorPane) loader.load();
 
             if (isValidToShowWorkPlace(workPlace))
@@ -289,6 +286,80 @@ public class Main extends Application {
 
     }
 
+    public void showDictionaryMain(Class clazz) {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/DictionaryListForm.fxml"));
+
+            AnchorPane workPlace = (AnchorPane) loader.load();
+
+            if (isValidToShowWorkPlace(workPlace))
+                return;
+
+            root.getChildren().add(workPlace);
+            workPlace.setId("dictionaryMain");
+
+            currentWorkPlace = workPlace;
+
+            //DictionaryListFormController<Teacher> dicControl = loader.getController();
+            //DictionaryListFormController<Teacher> dicControl = new DictionaryListFormController<>();
+            DictionaryListFormController controller = loader.getController();
+            controller.setMainApp(this);
+            //controller.setTypeParameterClass(Teacher.class);
+            controller.setTypeParameterClass(clazz);
+            controller.initForm();
+            //controller.setPlaceProperty();
+
+            // Bind controller and main app
+
+
+        } catch (IOException e) {
+            System.out.printf(e.toString());
+        }
+        /*
+        if (clazz.equals(Teacher.class))
+            showDictionaryTeacherMain();
+        else if (clazz.equals(Student.class))
+        */
+
+
+    }
+
+    public void showDictionaryTeacherMain() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/DictionaryListForm.fxml"));
+
+            AnchorPane workPlace = (AnchorPane) loader.load();
+
+            if (isValidToShowWorkPlace(workPlace))
+                return;
+
+            root.getChildren().add(workPlace);
+            workPlace.setId("dictionaryMain");
+
+            currentWorkPlace = workPlace;
+
+            //DictionaryListFormController<Teacher> dicControl = loader.getController();
+            //DictionaryListFormController<Teacher> dicControl = new DictionaryListFormController<>();
+            DictionaryListFormController controller = loader.getController();
+            controller.setMainApp(this);
+            //controller.setTypeParameterClass(Teacher.class);
+            controller.setTypeParameterClass(Student.class);
+            controller.initForm();
+            //controller.setPlaceProperty();
+
+            // Bind controller and main app
+
+
+        } catch (IOException e) {
+            System.out.printf(e.toString());
+        }
+    }
+
     public void showDictionaryStudentsAction(EnumAction action) {
 
         try {
@@ -296,7 +367,7 @@ public class Main extends Application {
             Stage studentDialogAction = new Stage();
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/fxml/StudentEditForm.fxml"));
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/StudentEditForm.fxml"));
             AnchorPane studentAction = loader.load();
 
             studentAction.setId("dictionaryStudentsFormAction");

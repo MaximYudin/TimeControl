@@ -4,11 +4,10 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import java.io.Serializable;
-import javax.persistence.Access;
-import javax.persistence.AccessType;
+//import javax.persistence.Access;
+//import javax.persistence.AccessType;
 
 @Entity
 @Table(name = "student")

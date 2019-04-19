@@ -1,12 +1,10 @@
-package org.russianfeature.controllers;
+package org.russianfeature.controllers.dictionary;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -28,10 +26,12 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.russianfeature.Main;
+import org.russianfeature.controllers.PreloadFormController;
+import org.russianfeature.controllers.QuestionYeaNoController;
 import org.russianfeature.model.Student;
 import org.russianfeature.model.StudentLoadInfo;
 
-public class StudentsListFormController {
+public class StudentsListFormController<T> {
 
     private Main mainApp;
     private ObservableList<Student> studentList = FXCollections.observableArrayList();
@@ -87,11 +87,13 @@ public class StudentsListFormController {
     void initialize() {
         showStudents();
 
-        SetColumnProperty();
+        setColumnProperty();
 
         setBtnImages();
 
         setFormEvents();
+
+        setButtonProperties();
     }
 
     @FXML
@@ -103,12 +105,19 @@ public class StudentsListFormController {
     @FXML
     void btnDeleteOnClick(ActionEvent event) {
 
-        String msgText = "Вы действительно хотите удалить запись?";
-        CommonUtil.showYesNoQuestionWindow(mainApp, msgText);
+        ObservableList<Student> selectedStudent = tableStudents.getSelectionModel().getSelectedItems();
+        StringBuilder msgText = new StringBuilder();
+        if (selectedStudent.size() > 1) {
+            msgText.append("Вы действительно хотите удалить записи?");
+        } else {
+            msgText.append("Вы действительно хотите удалить запись?");
+        }
+
+        CommonUtil.showYesNoQuestionWindow(mainApp, msgText.toString());
         if (QuestionYeaNoController.answer == EnumYesNo.NO)
             return;
 
-        ObservableList<Student> selectedStudent = tableStudents.getSelectionModel().getSelectedItems();
+        // Check relationships
         if (selectedStudent.size() == 0) return;
         StudentManager studentManager = new StudentManager();
         selectedStudent.forEach((student) -> {
@@ -123,12 +132,47 @@ public class StudentsListFormController {
         showEditCreateWindow(EnumAction.UPDATE);
     }
 
+    @FXML
+    void btnLoadFromExcelOnClick(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.setTitle("Выберите файл для загрузки");
+        fileChooser.setInitialDirectory(
+                new File(System.getProperty("user.home"))
+        );
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("XLSX", "*.xlsx"),
+                new FileChooser.ExtensionFilter("XLS", "*.xls")
+        );
+
+        File file = fileChooser.showOpenDialog(currentStage);
+        if (file != null) {
+            String msgText = "Вы действительно хотите выполнить загрузку?";
+            CommonUtil.showYesNoQuestionWindow(mainApp, msgText);
+            if (QuestionYeaNoController.answer == EnumYesNo.NO)
+                return;
+
+            List<StudentLoadInfo> studentList = FXCollections.observableArrayList();
+            try {
+                studentList = ExcelReader.getStudentListFromExcel(file);
+                int a = 1;
+            } catch (IOException exc) {
+                exc.printStackTrace();
+            } catch (InvalidFormatException exc) {
+                exc.printStackTrace();
+            }
+
+            showPreloadForm(studentList);
+        }
+    }
+
     void showEditCreateWindow(EnumAction action) {
 
-        Student student = tableStudents.getSelectionModel().getSelectedItem();
-        if (student == null
+        ObservableList<Student> selectedStudent = tableStudents.getSelectionModel().getSelectedItems();
+        if (selectedStudent.size() == 0
                 && action == EnumAction.UPDATE)
             return;
+        Student student = selectedStudent.get(0);
 
         try {
 
@@ -136,7 +180,7 @@ public class StudentsListFormController {
             studentDialogAction.setTitle("Создание/редактирование");
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/fxml/StudentEditForm.fxml"));
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/StudentEditForm.fxml"));
 
             AnchorPane studentAction = loader.load();
 
@@ -191,44 +235,14 @@ public class StudentsListFormController {
             preloadFormStage.initModality(Modality.APPLICATION_MODAL);
             preloadFormStage.showAndWait();
 
+            if (controller.mustRefreshData()) {
+                loadDataInTableView();
+            }
+
             //currentStudent = controller.getStudent();
 
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-
-    @FXML
-    void btnLoadFromExcelOnClick(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
-
-        fileChooser.setTitle("Выберите файл для загрузки");
-        fileChooser.setInitialDirectory(
-                new File(System.getProperty("user.home"))
-        );
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("XLSX", "*.xlsx"),
-                new FileChooser.ExtensionFilter("XLS", "*.xls")
-        );
-
-        File file = fileChooser.showOpenDialog(currentStage);
-        if (file != null) {
-            String msgText = "Вы действительно хотите выполнить загрузку?";
-            CommonUtil.showYesNoQuestionWindow(mainApp, msgText);
-            if (QuestionYeaNoController.answer == EnumYesNo.NO)
-                return;
-
-            List<StudentLoadInfo> studentList = FXCollections.observableArrayList();
-            try {
-                studentList = ExcelReader.getStudentListFromExcel(file);
-                int a = 1;
-            } catch (IOException exc) {
-                exc.printStackTrace();
-            } catch (InvalidFormatException exc) {
-                exc.printStackTrace();
-            }
-
-            showPreloadForm(studentList);
         }
     }
 
@@ -261,7 +275,7 @@ public class StudentsListFormController {
 
     }
 
-    void SetColumnProperty() {
+    void setColumnProperty() {
         tableStudents.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
         firstName.prefWidthProperty().bind(dictionaryStudentsMain.widthProperty().divide(5.0));
         secondName.prefWidthProperty().bind(dictionaryStudentsMain.widthProperty().divide(5.0));
@@ -282,7 +296,12 @@ public class StudentsListFormController {
                         setText(null);
                     }
                     else {
-                        setText(format.format(java.sql.Date.valueOf(item)));
+                        //setText(format.format(java.sql.Date.valueOf(item)));
+                        try {
+                            setText(format.format(format.parse(item)));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             };
@@ -341,11 +360,37 @@ public class StudentsListFormController {
             ImgView.setFitWidth(30);
             btnDelete.setGraphic(ImgView);
 
+            image = new Image(getClass().getClassLoader().getResourceAsStream("images/excel_load.png"));
+            ImgView = new ImageView(image);
+            ImgView.setFitHeight(30);
+            ImgView.setFitWidth(30);
+            btnLoadFromExcel.setGraphic(ImgView);
+
         } catch (Exception ex) {
             ex.printStackTrace();
 
         }
 
+    }
+
+    private void setButtonProperties() {
+        btnAdd.setTooltip(new Tooltip("Добавить запись"));
+        btnEdit.setTooltip(new Tooltip("Редактировать запись"));
+        btnDelete.setTooltip(new Tooltip("Удалить записи"));
+        btnLoadFromExcel.setTooltip(new Tooltip("Загрузить из Excel"));
+    }
+
+    // Form events
+    private void setFormEvents() {
+        tableStudents.setRowFactory( tv -> {
+            TableRow<Student> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+                    showEditCreateWindow(EnumAction.UPDATE);
+                }
+            });
+            return row ;
+        });
     }
 
     private ObservableList<Student> getStudentList() {
@@ -376,6 +421,7 @@ public class StudentsListFormController {
                 tableStudents.getFocusModel().focus(index);
             }
         }
+        tableStudents.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     private Integer getIndexByStudent(Student student) {
@@ -390,16 +436,4 @@ public class StudentsListFormController {
         return -1;
     }
 
-    // Form events
-    private void setFormEvents() {
-        tableStudents.setRowFactory( tv -> {
-            TableRow<Student> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-                    showEditCreateWindow(EnumAction.UPDATE);;
-                }
-            });
-            return row ;
-        });
-    }
 }

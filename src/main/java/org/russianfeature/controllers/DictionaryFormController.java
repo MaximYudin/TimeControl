@@ -7,6 +7,8 @@ import javafx.scene.layout.AnchorPane;
 import com.utils.Config;
 import javafx.scene.text.Font;
 import org.russianfeature.Main;
+import org.russianfeature.model.Student;
+import org.russianfeature.model.Teacher;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -41,6 +43,13 @@ public class DictionaryFormController {
         mainApp.removeWorkPlace("dictionaryStudentsMain");
 
         mainApp.showDictionaryStudentsMain();
+    }
+
+    @FXML
+    void btnTeacherOnClick(ActionEvent event) {
+        mainApp.removeWorkPlace("dictionaryMain");
+
+        mainApp.showDictionaryMain(Teacher.class);
     }
 
     @FXML

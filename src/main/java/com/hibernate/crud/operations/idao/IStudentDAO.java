@@ -1,8 +1,6 @@
 package com.hibernate.crud.operations.idao;
 
-import com.hibernate.crud.operations.idao.IGenericDAO;
 import org.russianfeature.model.Student;
-
 import java.util.List;
 import java.util.Map;
 

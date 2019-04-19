@@ -1,5 +1,7 @@
 package com.utils;
 
+import org.hibernate.cfg.Configuration;
+
 import java.awt.*;
 import java.util.*;
 import java.util.List;
@@ -31,6 +33,30 @@ public class Config {
     public static int DICTIONARY_MENU_WIDTH = 180;
     public static int DICTIONARY_MENU_HEIGHT = 180;
     public static int DICTIONARY_MENU_FONT_SIZE = 20;
+
+    private static TreeMap<String, String> fieldMap;
+    private static TreeMap<String, String> fieldNonEmpty;
+
+    static {
+        // DB table fields mapping name
+        fieldMap = new TreeMap<>();
+        fieldMap.put("firstName", "Фамилия");
+        fieldMap.put("secondName", "Имя");
+        fieldMap.put("lastName", "Отчество");
+        fieldMap.put("birthDate", "Дата рождения");
+        fieldMap.put("createDate", "Дата создания");
+        fieldMap.put("comment", "Комментарий");
+        fieldMap.put("startWorkDate", "Дата начала работы");
+        fieldMap.put("endWorkDate", "Дата окончания работы");
+        fieldMap.put("changeDate", "Дата изменения");
+
+        // DB table fields non empty
+        fieldNonEmpty = new TreeMap<>();
+        fieldNonEmpty.put("firstName", "firstName");
+        fieldNonEmpty.put("secondName", "secondName");
+        fieldNonEmpty.put("lastName", "lastName");
+        fieldNonEmpty.put("birthDate", "birthDate");
+    }
 
     public static void setScreenProperty() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -165,6 +191,14 @@ public class Config {
         imgList.add("settingsBlock");
 
         return imgList;
+    }
+
+    public static TreeMap<String, String> getFieldMapName() {
+        return fieldMap;
+    }
+
+    public static TreeMap<String, String> getFieldNonEmpty() {
+        return fieldNonEmpty;
     }
 
 }

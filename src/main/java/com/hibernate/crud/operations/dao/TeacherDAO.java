@@ -1,25 +1,26 @@
 package com.hibernate.crud.operations.dao;
 
 import com.hibernate.crud.operations.HibernateUtil;
-import com.hibernate.crud.operations.idao.IStudentDAO;
+import com.hibernate.crud.operations.idao.ITeacherDAO;
 import org.hibernate.query.Query;
-import org.russianfeature.model.Student;
+import org.russianfeature.model.Teacher;
+
 import java.util.List;
 import java.util.Map;
 
-public class StudentDAO extends GenericDAO<Student, Integer> implements IStudentDAO {
+public class TeacherDAO extends GenericDAO<Teacher, Integer> implements ITeacherDAO {
 
     @Override
-    public Student findByName(String name, String surname) {
-        Student student = null;
-        String sql = "select s from Student s where s.firstName = :name and s.secondName = :surname";
+    public Teacher findByName(String name, String surname) {
+        Teacher teacher = null;
+        String sql = "select s from Teacher s where s.firstName = :name and s.secondName = :surname";
         Query query = HibernateUtil.getSession().createQuery(sql).setParameter("name", name).setParameter("surname", surname);
-        student = findOne(query);
-        return student;
+        teacher = findOne(query);
+        return teacher;
     }
 
     @Override
-    public List<Student> getDoubles(Map<String, String> params) {
+    public List<Teacher> getDoubles(Map<String, String> params) {
         String firstName = params.get("firstName");
         String secondName = params.get("secondName");
         String lastName = params.get("lastName");
@@ -32,7 +33,7 @@ public class StudentDAO extends GenericDAO<Student, Integer> implements IStudent
         else
             idParameter = 0;
 
-        String sql = "select s from Student s where s.firstName = :firstName " +
+        String sql = "select s from Teacher s where s.firstName = :firstName " +
                 "and s.secondName = :secondName and s.lastName = :lastName " +
                 "and s.birthDate = :birthDate and s.id <> :id";
 
@@ -43,7 +44,7 @@ public class StudentDAO extends GenericDAO<Student, Integer> implements IStudent
                 .setParameter("birthDate", birthDate)
                 .setParameter("id", idParameter);
 
-        List<Student> studentDoubles = findMany(query);
-        return studentDoubles;
+        List<Teacher> teacherDoubles = findMany(query);
+        return teacherDoubles;
     }
 }

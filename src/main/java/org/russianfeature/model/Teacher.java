@@ -2,13 +2,15 @@ package org.russianfeature.model;
 
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
-
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "student")
 @Access(AccessType.PROPERTY)
-public class Teacher {
+public class Teacher implements Serializable {
     private IntegerProperty id;
     private StringProperty firstName;
     private StringProperty secondName;
@@ -19,7 +21,21 @@ public class Teacher {
     private StringProperty startWorkDate;
     private StringProperty endWorkDate;
     private StringProperty changeDate;
-    private StringProperty changeAuthorId;
+    private IntegerProperty changeAuthorId;
+
+    public Teacher() {
+        this.id = new SimpleIntegerProperty();
+        this.firstName = new SimpleStringProperty("");
+        this.secondName = new SimpleStringProperty("");
+        this.lastName = new SimpleStringProperty("");
+        this.comment = new SimpleStringProperty("");
+        this.createDate = new SimpleStringProperty("");
+        this.birthDate = new SimpleStringProperty("");
+        this.startWorkDate = new SimpleStringProperty("");
+        this.endWorkDate = new SimpleStringProperty("");
+        this.changeDate = new SimpleStringProperty("");
+        this.changeAuthorId = new SimpleIntegerProperty();
+    }
 
     @Id
     @Column(name = "id")
@@ -141,15 +157,15 @@ public class Teacher {
     }
 
     @Column(name = "changeAuthorId")
-    public String getChangeAuthorId() {
+    public Integer getChangeAuthorId() {
         return changeAuthorId.get();
     }
 
-    public StringProperty changeAuthorIdProperty() {
+    public IntegerProperty changeAuthorIdProperty() {
         return changeAuthorId;
     }
 
-    public void setChangeAuthorId(String changeAuthor) {
+    public void setChangeAuthorId(Integer changeAuthor) {
         this.changeAuthorId.set(changeAuthor);
     }
 

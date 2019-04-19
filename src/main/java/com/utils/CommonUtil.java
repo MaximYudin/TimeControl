@@ -12,6 +12,7 @@ import org.russianfeature.controllers.NotificationFormController;
 import org.russianfeature.controllers.QuestionYeaNoController;
 
 import java.io.IOException;
+import java.util.TreeMap;
 
 public class CommonUtil {
     public static String convertFirstLetterToUpperCase(String value) {
@@ -90,5 +91,18 @@ public class CommonUtil {
 
     public static void setStyleBackgroundColor(Node node, String color) {
         node.setStyle("-fx-background-color: " + color);
+    }
+
+    public static String getMapFieldName(String fieldName) {
+        TreeMap<String, String> mapFields = Config.getFieldMapName();
+        String correctName = mapFields.get(fieldName);
+
+        return (correctName == null ? fieldName : correctName);
+    }
+
+    public static Boolean isFieldValueMustBeNonEmpty(String fieldName) {
+        TreeMap<String, String> fields = Config.getFieldNonEmpty();
+
+        return (fields.get(fieldName) == null ? false : true);
     }
 }

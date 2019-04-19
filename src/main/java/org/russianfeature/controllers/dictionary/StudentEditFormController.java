@@ -1,4 +1,4 @@
-package org.russianfeature.controllers;
+package org.russianfeature.controllers.dictionary;
 
 import java.net.URL;
 import java.text.DateFormat;
@@ -26,6 +26,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.russianfeature.Main;
 import com.utils.EnumAction;
+import org.russianfeature.controllers.QuestionYeaNoController;
 import org.russianfeature.model.Student;
 import com.utils.CommonUtil;
 
@@ -182,6 +183,10 @@ public class StudentEditFormController {
 
     @FXML
     void btnCheckDoublesOnClick(ActionEvent event) {
+        StringBuilder msgError = new StringBuilder("");
+        if (!isFormFieldsValueValid(msgError))
+            return;
+
         doublesStudentList = getDoublesStudentList();
         showDoublesStudents();
     }
@@ -211,7 +216,6 @@ public class StudentEditFormController {
         Student newStudent = new Student();
         setStudentProperty(newStudent);
         studentManager.saveStudent(newStudent);
-        //studentManager.createStudent(newStudent);
         student = newStudent;
     }
 
@@ -221,7 +225,6 @@ public class StudentEditFormController {
         entity.setSecondName(fldSecondName.getText());
         entity.setLastName(fldLastName.getText());
         entity.setComment(taComment.getText());
-        //SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
         if (action == EnumAction.CREATE) {
             Date dt = new Date();
@@ -231,9 +234,6 @@ public class StudentEditFormController {
 
         if (fldBirthDate.getValue() != null) {
             try {
-                //DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
-                //DateFormat sourceFormat = new SimpleDateFormat("yyyy-MM-dd");
-                //Date date = sourceFormat.parse(fldBirthDate.getValue().toString());
                 Date date = sourceFormat.parse(fldBirthDate.getEditor().getText());
                 entity.setBirthDate(sourceFormat.format(date));
             } catch (ParseException e) {
@@ -260,9 +260,6 @@ public class StudentEditFormController {
         if (student.getBirthDate() != null) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-                //java.sql.Date bDate = java.sql.Date.valueOf(student.getBirthDate());
-                //fldBirthDate.setValue(bDate.toLocalDate());
-                //fldBirthDate.getEditor().setText(student.getBirthDate());
                 fldBirthDate.setValue(format.parse(student.getBirthDate()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -379,21 +376,17 @@ public class StudentEditFormController {
         if (fldFirstName.getText().isEmpty()) {
             msgError.append("Не заполнена фамилия");
             CommonUtil.setStyleBackgroundColor(fldFirstName, errorColor);
-            //fldFirstName.setStyle("-fx-control-inner-background: red");
         }
         if (fldSecondName.getText().isEmpty()) {
             msgError.append((msgError.toString().isEmpty() ? "" : ", ") + "Не заполнено имя");
-            //fldSecondName.setStyle("-fx-background-color: red");
             CommonUtil.setStyleBackgroundColor(fldSecondName, errorColor);
         }
         if (fldLastName.getText().isEmpty()) {
             msgError.append((msgError.toString().isEmpty() ? "" : ", ") + "Не заполнено отчество");
-            //fldLastName.setStyle("-fx-background-color: red");
             CommonUtil.setStyleBackgroundColor(fldLastName, errorColor);
         }
         if (fldBirthDate.getValue() == null) {
             msgError.append((msgError.toString().isEmpty() ? "" : ", ") + "Не заполнено дата рождения");
-            //fldBirthDate.setStyle("-fx-background-color: red");
             CommonUtil.setStyleBackgroundColor(fldBirthDate, errorColor);
         }
 

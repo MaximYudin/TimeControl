@@ -1,7 +1,6 @@
 package com.hibernate.crud.operations.idao;
 
 import org.hibernate.query.Query;
-
 import java.io.Serializable;
 import java.util.List;
 

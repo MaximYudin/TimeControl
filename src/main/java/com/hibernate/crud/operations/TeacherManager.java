@@ -1,8 +1,10 @@
 package com.hibernate.crud.operations;
 
 import com.hibernate.crud.operations.dao.StudentDAO;
+import com.hibernate.crud.operations.dao.TeacherDAO;
 import com.hibernate.crud.operations.idao.IStudentDAO;
-import com.hibernate.crud.operations.idao.IStudentManger;
+import com.hibernate.crud.operations.idao.ITeacherDAO;
+import com.hibernate.crud.operations.idao.ITeacherManager;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.hibernate.HibernateException;
@@ -11,33 +13,36 @@ import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.russianfeature.model.Student;
 import org.russianfeature.model.StudentLoadInfo;
+import org.russianfeature.model.Teacher;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class StudentManager implements IStudentManger {
-    private IStudentDAO studentDAO = new StudentDAO();
+public class TeacherManager implements ITeacherManager {
+    private ITeacherDAO teacherDAO = new TeacherDAO();
+
     @Override
-    public Student findByStudentName(String name, String surname) {
-        Student student = null;
+    public Teacher findByTeacherName(String name, String surname) {
+        Teacher teacher = null;
         try {
             HibernateUtil.beginTransaction();
-            student = studentDAO.findByName(name, surname);
+            teacher = teacherDAO.findByName(name, surname);
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
             System.out.println("Query returned more than one results.");
         } catch (HibernateException ex) {
             System.out.println(ex);
         }
-        return student;
+        return teacher;
     }
 
     @Override
-    public void deleteStudent(Student student) {
+    public void deleteTeacher(Teacher teacher) {
         try {
             HibernateUtil.beginTransaction();
-            studentDAO.delete(student);
+            teacherDAO.delete(teacher);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -46,36 +51,36 @@ public class StudentManager implements IStudentManger {
     }
 
     @Override
-    public List<Student> getAllStudent() {
-        List<Student> studentList = new ArrayList<Student>();
+    public List<Teacher> getAllTeacher() {
+        List<Teacher> teacherList = new ArrayList<>();
         try {
             HibernateUtil.beginTransaction();
-            studentList = studentDAO.findAll(Student.class);
+            teacherList = teacherDAO.findAll(Teacher.class);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
         }
-        return studentList;
+        return teacherList;
     }
 
     @Override
-    public Student findStudentById(int id) {
-        Student student = null;
+    public Teacher findTeacherById(int id) {
+        Teacher teacher = null;
         try {
             HibernateUtil.beginTransaction();
-            student = studentDAO.findByID(Student.class, id);
+            teacher = teacherDAO.findByID(Teacher.class, id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
         }
-        return student;
+        return teacher;
     }
 
     @Override
-    public void saveStudent(Student student) {
+    public void saveTeacher(Teacher teacher) {
         try {
             HibernateUtil.beginTransaction();
-            studentDAO.save(student);
+            teacherDAO.save(teacher);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             //System.out.println(ex);
@@ -85,10 +90,10 @@ public class StudentManager implements IStudentManger {
     }
 
     @Override
-    public void createStudent(Student student) {
+    public void createTeacher(Teacher teacher) {
         try {
             HibernateUtil.beginTransaction();
-            studentDAO.create(student);
+            teacherDAO.create(teacher);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -97,18 +102,19 @@ public class StudentManager implements IStudentManger {
     }
 
     @Override
-    public List<Student> getDoubles(Map<String, String> params) {
-        List<Student> studentList = new ArrayList<>();
+    public List<Teacher> getDoubles(Map<String, String> params) {
+        List<Teacher> teacherList = new ArrayList<>();
         try {
             HibernateUtil.beginTransaction();
-            studentList = studentDAO.getDoubles(params);
+            teacherList = teacherDAO.getDoubles(params);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
         }
-        return studentList;
+        return teacherList;
     }
 
+    /*
     public ObservableList<StudentLoadInfo> getStudentLoadList(List<StudentLoadInfo> studentInfoList) {
         Session session = HibernateUtil.beginTransaction();
         // Delete all rows from temp table
@@ -143,7 +149,7 @@ public class StudentManager implements IStudentManger {
                         "\tand st.secondName = s.secondName\n" +
                         "\tand st.lastName = s.lastName\n" +
                         "\tand st.birthDate = s.birthDate\n"
-                        //+"where s.firstName is null"
+                //+"where s.firstName is null"
         );
 
         ObservableList<StudentLoadInfo> studentInfoObsList = FXCollections.observableArrayList();
@@ -177,4 +183,5 @@ public class StudentManager implements IStudentManger {
 
         return studentInfoObsList;
     }
+    */
 }

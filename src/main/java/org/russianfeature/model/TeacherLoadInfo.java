@@ -2,12 +2,10 @@ package org.russianfeature.model;
 
 import javafx.beans.property.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
-public class StudentLoadInfo implements Serializable {
+public class TeacherLoadInfo implements Serializable {
 
-    private BooleanProperty loadFlag;
     private IntegerProperty id;
     private StringProperty firstName;
     private StringProperty secondName;
@@ -15,10 +13,13 @@ public class StudentLoadInfo implements Serializable {
     private StringProperty comment;
     private StringProperty createDate;
     private StringProperty birthDate;
+    private StringProperty startWorkDate;
+    private StringProperty endWorkDate;
     private StringProperty errorText;
     private BooleanProperty dublicateFlag;
+    private BooleanProperty loadFlag;
 
-    public StudentLoadInfo() {
+    public TeacherLoadInfo() {
         this.id = new SimpleIntegerProperty();
         this.firstName = new SimpleStringProperty("");
         this.secondName = new SimpleStringProperty("");
@@ -29,6 +30,8 @@ public class StudentLoadInfo implements Serializable {
         this.errorText = new SimpleStringProperty("");
         this.dublicateFlag = new SimpleBooleanProperty(false);
         this.loadFlag = new SimpleBooleanProperty(false);
+        this.startWorkDate = new SimpleStringProperty("");
+        this.endWorkDate = new SimpleStringProperty("");
     }
 
     public int getId() {
@@ -149,6 +152,30 @@ public class StudentLoadInfo implements Serializable {
 
     public void setLoadFlag(boolean loadFlag) {
         this.loadFlag.set(loadFlag);
+    }
+
+    public String getStartWorkDate() {
+        return startWorkDate.get();
+    }
+
+    public StringProperty startWorkDateProperty() {
+        return startWorkDate;
+    }
+
+    public void setStartWorkDate(String startWorkDate) {
+        this.startWorkDate.set(startWorkDate);
+    }
+
+    public String getEndWorkDate() {
+        return endWorkDate.get();
+    }
+
+    public StringProperty endWorkDateProperty() {
+        return endWorkDate;
+    }
+
+    public void setEndWorkDate(String endWorkDate) {
+        this.endWorkDate.set(endWorkDate);
     }
 }
 

@@ -10,6 +10,8 @@ import javafx.stage.Stage;
 import org.russianfeature.Main;
 import org.russianfeature.controllers.NotificationFormController;
 import org.russianfeature.controllers.QuestionYeaNoController;
+import org.russianfeature.model.Student;
+import org.russianfeature.model.Teacher;
 
 import java.io.IOException;
 import java.util.TreeMap;
@@ -104,5 +106,18 @@ public class CommonUtil {
         TreeMap<String, String> fields = Config.getFieldNonEmpty();
 
         return (fields.get(fieldName) == null ? false : true);
+    }
+
+    public static Boolean isFieldVisible(String fieldName) {
+        TreeMap<String, String> fields = Config.getVisibleFields();
+
+        return (fields.get(fieldName) == null ? false : true);
+    }
+
+    public static Boolean isLoadFromExcelButtonHandled(Class clazz) {
+        if (clazz.equals(Student.class)
+            || clazz.equals(Teacher.class))
+            return true;
+        return false;
     }
 }

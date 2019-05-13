@@ -35,7 +35,7 @@ public class Student implements Serializable {
     @Id
     //@Column(name = "id", unique = true, nullable = false)
     //@GeneratedValue(strategy = GenerationType.TABLE, generator="native")
-    public int getId() {
+    public Integer getId() {
         return id.get();
     }
 

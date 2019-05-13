@@ -34,12 +34,13 @@ public class Config {
     public static int DICTIONARY_MENU_HEIGHT = 180;
     public static int DICTIONARY_MENU_FONT_SIZE = 20;
 
-    private static TreeMap<String, String> fieldMap;
-    private static TreeMap<String, String> fieldNonEmpty;
+    private static TreeMap<String, String> fieldMap = new TreeMap<>();
+    private static TreeMap<String, String> fieldNonEmpty = new TreeMap<>();
+    private static TreeMap<String, String> visibleFields = new TreeMap<>();
 
     static {
         // DB table fields mapping name
-        fieldMap = new TreeMap<>();
+        //fieldMap = new TreeMap<>();
         fieldMap.put("firstName", "Фамилия");
         fieldMap.put("secondName", "Имя");
         fieldMap.put("lastName", "Отчество");
@@ -49,13 +50,29 @@ public class Config {
         fieldMap.put("startWorkDate", "Дата начала работы");
         fieldMap.put("endWorkDate", "Дата окончания работы");
         fieldMap.put("changeDate", "Дата изменения");
+        fieldMap.put("groupKindName", "Вид группы");
+        fieldMap.put("groupTypeName", "Тип группы");
+        fieldMap.put("endDate", "Дата окончания");
 
         // DB table fields non empty
-        fieldNonEmpty = new TreeMap<>();
+        //fieldNonEmpty = new TreeMap<>();
         fieldNonEmpty.put("firstName", "firstName");
         fieldNonEmpty.put("secondName", "secondName");
         fieldNonEmpty.put("lastName", "lastName");
         fieldNonEmpty.put("birthDate", "birthDate");
+
+        // DB table visible fields
+        //visibleFields.put("id", "id");
+        visibleFields.put("firstName", "firstName");
+        visibleFields.put("secondName", "secondName");
+        visibleFields.put("lastName", "lastName");
+        visibleFields.put("birthDate", "birthDate");
+        visibleFields.put("comment", "comment");
+        visibleFields.put("startWorkDate", "startWorkDate");
+        visibleFields.put("endWorkDate", "endWorkDate");
+        visibleFields.put("groupKindName", "groupKindName");
+        visibleFields.put("groupTypeName", "groupTypeName");
+        visibleFields.put("endDate", "endDate");
     }
 
     public static void setScreenProperty() {
@@ -201,4 +218,5 @@ public class Config {
         return fieldNonEmpty;
     }
 
+    public static TreeMap<String, String> getVisibleFields() { return visibleFields; }
 }

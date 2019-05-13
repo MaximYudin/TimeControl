@@ -7,6 +7,7 @@ import javafx.scene.layout.AnchorPane;
 import com.utils.Config;
 import javafx.scene.text.Font;
 import org.russianfeature.Main;
+import org.russianfeature.model.GroupType;
 import org.russianfeature.model.Student;
 import org.russianfeature.model.Teacher;
 
@@ -39,17 +40,28 @@ public class DictionaryFormController {
     private Button btnGroups;
 
     @FXML
+    private Button btnGroupType;
+
+    @FXML
     void btnStudentOnClick(ActionEvent event) {
         mainApp.removeWorkPlace("dictionaryStudentsMain");
 
-        mainApp.showDictionaryStudentsMain();
+        //mainApp.showDictionaryStudentsMain();
+        mainApp.showDictionaryMain(Student.class);
     }
 
     @FXML
     void btnTeacherOnClick(ActionEvent event) {
-        mainApp.removeWorkPlace("dictionaryMain");
+        mainApp.removeWorkPlace("dictionaryTeacherMain");
 
         mainApp.showDictionaryMain(Teacher.class);
+    }
+
+    @FXML
+    void btnGroupTypeOnClick(ActionEvent event) {
+        mainApp.removeWorkPlace("dictionaryGroupTypeMain");
+
+        mainApp.showDictionaryMain(GroupType.class);
     }
 
     @FXML
@@ -71,11 +83,13 @@ public class DictionaryFormController {
         btnStudents.setPrefSize(Config.DICTIONARY_MENU_WIDTH, Config.DICTIONARY_MENU_HEIGHT);
         btnTeachers.setPrefSize(Config.DICTIONARY_MENU_WIDTH, Config.DICTIONARY_MENU_HEIGHT);
         btnLessons.setPrefSize(Config.DICTIONARY_MENU_WIDTH, Config.DICTIONARY_MENU_HEIGHT);
+        btnGroupType.setPrefSize(Config.DICTIONARY_MENU_WIDTH, Config.DICTIONARY_MENU_HEIGHT);
 
         btnGroups.setFont(new Font("System", Config.DICTIONARY_MENU_FONT_SIZE));
         btnStudents.setFont(new Font("System", Config.DICTIONARY_MENU_FONT_SIZE));
         btnTeachers.setFont(new Font("System", Config.DICTIONARY_MENU_FONT_SIZE));
         btnLessons.setFont(new Font("System", Config.DICTIONARY_MENU_FONT_SIZE));
+        btnGroupType.setFont(new Font("System", Config.DICTIONARY_MENU_FONT_SIZE));
         //bindLayoutsBlocks();
 
     }

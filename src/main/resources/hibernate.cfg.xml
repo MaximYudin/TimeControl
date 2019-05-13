@@ -26,5 +26,7 @@
         <!-- Mapping With Model Class Containing Annotations
         <mapping class="org.russianfeature.model.Student" />-->
         <mapping resource="/student.hbm.xml"/>
+        <mapping resource="/teacher.hbm.xml"/>
+        <mapping resource="/groupType.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

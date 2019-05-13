@@ -7,7 +7,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.ResourceBundle;
-
 import com.hibernate.crud.operations.StudentManager;
 import com.utils.*;
 import javafx.collections.FXCollections;
@@ -94,12 +93,15 @@ public class StudentsListFormController<T> {
         setFormEvents();
 
         setButtonProperties();
+
+        System.gc();
     }
 
     @FXML
     void btnAddOnClick(ActionEvent event) {
         showEditCreateWindow(EnumAction.CREATE);
         loadDataInTableView();
+        System.gc();
     }
 
     @FXML
@@ -130,6 +132,7 @@ public class StudentsListFormController<T> {
     @FXML
     void btnEditOnClick(ActionEvent event) {
         showEditCreateWindow(EnumAction.UPDATE);
+        System.gc();
     }
 
     @FXML
@@ -164,6 +167,7 @@ public class StudentsListFormController<T> {
 
             showPreloadForm(studentList);
         }
+        System.gc();
     }
 
     void showEditCreateWindow(EnumAction action) {
@@ -202,6 +206,8 @@ public class StudentsListFormController<T> {
             studentDialogAction.showAndWait();
 
             currentStudent = controller.getStudent();
+
+            System.gc();
 
         } catch (IOException e) {
             e.printStackTrace();

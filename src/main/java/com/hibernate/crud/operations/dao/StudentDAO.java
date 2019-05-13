@@ -27,10 +27,10 @@ public class StudentDAO extends GenericDAO<Student, Integer> implements IStudent
         String id = params.get("id");
         String checkId = params.get("checkId");
         Integer idParameter;
-        if (checkId == "t")
+        /*if (checkId == "t")
             idParameter = Integer.valueOf(id);
         else
-            idParameter = 0;
+            idParameter = 0;*/
 
         String sql = "select s from Student s where s.firstName = :firstName " +
                 "and s.secondName = :secondName and s.lastName = :lastName " +
@@ -41,7 +41,7 @@ public class StudentDAO extends GenericDAO<Student, Integer> implements IStudent
                 .setParameter("secondName", secondName)
                 .setParameter("lastName", lastName)
                 .setParameter("birthDate", birthDate)
-                .setParameter("id", idParameter);
+                .setParameter("id", Integer.valueOf(id));
 
         List<Student> studentDoubles = findMany(query);
         return studentDoubles;

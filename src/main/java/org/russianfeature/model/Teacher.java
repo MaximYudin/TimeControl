@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "student")
+@Table(name = "teacher")
 @Access(AccessType.PROPERTY)
 public class Teacher implements Serializable {
     private IntegerProperty id;
@@ -40,7 +40,7 @@ public class Teacher implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public int getId() {
+    public Integer getId() {
         return id.get();
     }
 

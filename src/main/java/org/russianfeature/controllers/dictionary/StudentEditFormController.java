@@ -184,8 +184,10 @@ public class StudentEditFormController {
     @FXML
     void btnCheckDoublesOnClick(ActionEvent event) {
         StringBuilder msgError = new StringBuilder("");
-        if (!isFormFieldsValueValid(msgError))
+        if (!isFormFieldsValueValid(msgError)) {
+            CommonUtil.showNotificationWindow(mainApp, msgError);
             return;
+        }
 
         doublesStudentList = getDoublesStudentList();
         showDoublesStudents();
@@ -373,22 +375,30 @@ public class StudentEditFormController {
     private boolean isFormFieldsValueValid(StringBuilder msgError) {
 
         String errorColor = "red";
+        String goodColor = "white";
         if (fldFirstName.getText().isEmpty()) {
             msgError.append("Не заполнена фамилия");
             CommonUtil.setStyleBackgroundColor(fldFirstName, errorColor);
-        }
+        } else
+            CommonUtil.setStyleBackgroundColor(fldFirstName, goodColor);
+
         if (fldSecondName.getText().isEmpty()) {
             msgError.append((msgError.toString().isEmpty() ? "" : ", ") + "Не заполнено имя");
             CommonUtil.setStyleBackgroundColor(fldSecondName, errorColor);
-        }
+        } else
+            CommonUtil.setStyleBackgroundColor(fldSecondName, goodColor);
+
         if (fldLastName.getText().isEmpty()) {
             msgError.append((msgError.toString().isEmpty() ? "" : ", ") + "Не заполнено отчество");
             CommonUtil.setStyleBackgroundColor(fldLastName, errorColor);
-        }
+        } else
+            CommonUtil.setStyleBackgroundColor(fldLastName, goodColor);
+
         if (fldBirthDate.getValue() == null) {
             msgError.append((msgError.toString().isEmpty() ? "" : ", ") + "Не заполнено дата рождения");
             CommonUtil.setStyleBackgroundColor(fldBirthDate, errorColor);
-        }
+        } else
+            CommonUtil.setStyleBackgroundColor(fldBirthDate, goodColor);
 
         return (msgError.toString().isEmpty() ? true : false);
     }

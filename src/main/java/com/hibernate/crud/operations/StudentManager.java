@@ -109,6 +109,7 @@ public class StudentManager implements IStudentManger {
         return studentList;
     }
 
+    // Get student load list and check on doubles
     public ObservableList<StudentLoadInfo> getStudentLoadList(List<StudentLoadInfo> studentInfoList) {
         Session session = HibernateUtil.beginTransaction();
         // Delete all rows from temp table

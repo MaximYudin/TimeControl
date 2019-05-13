@@ -10,6 +10,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import org.russianfeature.controllers.*;
 import org.russianfeature.controllers.dictionary.DictionaryListFormController;
@@ -26,6 +27,22 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        /*
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/fxml/Test.fxml"));
+            root = loader.load();
+
+            primaryStage.setTitle("Time control BEST");
+            primaryStage.setScene(new Scene(root, Config.MAIN_FORM_WIDTH, Config.MAIN_FORM_HEIGHT));
+            primaryStage.show();
+
+            System.gc();
+
+            //MainFormController controller = loader.getController();
+            //controller.setMainApp(this);
+
+        */
 
         Config.setScreenProperty();
 
@@ -303,8 +320,7 @@ public class Main extends Application {
 
             currentWorkPlace = workPlace;
 
-            //DictionaryListFormController<Teacher> dicControl = loader.getController();
-            //DictionaryListFormController<Teacher> dicControl = new DictionaryListFormController<>();
+            //DictionaryListFormController<Teacher> controller = new DictionaryListFormController<>();
             DictionaryListFormController controller = loader.getController();
             controller.setMainApp(this);
             //controller.setTypeParameterClass(Teacher.class);

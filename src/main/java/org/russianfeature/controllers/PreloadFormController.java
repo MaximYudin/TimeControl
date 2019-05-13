@@ -1,6 +1,10 @@
 package org.russianfeature.controllers;
 
 import com.hibernate.crud.operations.StudentManager;
+import com.hibernate.crud.operations.TeacherManager;
+import com.utils.CommonUtil;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.StringProperty;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -15,22 +19,29 @@ import javafx.stage.Stage;
 import org.russianfeature.Main;
 import org.russianfeature.model.Student;
 import org.russianfeature.model.StudentLoadInfo;
+import org.russianfeature.model.Teacher;
+import org.russianfeature.model.TeacherLoadInfo;
+
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class PreloadFormController {
+public class PreloadFormController<T> {
 
     private Stage stage;
     private Main mainApp;
-    private List<StudentLoadInfo> dataList;
+    private List<T> dataList;
     private AnchorPane pane;
     private Button btnOK = new Button("ОК");
     private Button btnCancel = new Button("ОТМЕНА");
-    private ObservableList<StudentLoadInfo> studentInfoObsList;
-    private TableView<StudentLoadInfo> tblStudentView = new TableView<>();
+    private ObservableList<T> entityInfoObsList;
+    private TableView<T> tblView = new TableView<>();
     private boolean refreshData = false;
+    private Class<T> typeParameterClass;
+    private List<String> columnList = new ArrayList<>();
 
     @FXML
     void initialize() {
@@ -44,7 +55,7 @@ public class PreloadFormController {
         stage = stg;
     }
 
-    public void setDataList(List<StudentLoadInfo> dtList) {
+    public void setDataList(List<T> dtList) {
         dataList = dtList;
     }
 
@@ -52,82 +63,64 @@ public class PreloadFormController {
         this.pane = pane;
     }
 
+    public void setTypeParameterClass(Class<T> clazz) {
+        typeParameterClass = clazz;
+    }
+
     public void setElementFormProperty() {
 
-        StudentManager studentManager = new StudentManager();
-        studentInfoObsList = studentManager.getStudentLoadList(dataList);
+        setEntityInfoObsList();
+
+        if (entityInfoObsList == null ||
+                entityInfoObsList.size() == 0)
+            return;
 
         // Main table view with data
-        //TableView<StudentLoadInfo> tblStudentView = new TableView<>();
-        tblStudentView.setEditable(true);
+        tblView.setEditable(true);
 
-        // Columns properties for table view
-        TableColumn<StudentLoadInfo, Boolean> loadFlagCol = new TableColumn<>("loadFlag");
-        loadFlagCol.setCellValueFactory(new PropertyValueFactory<StudentLoadInfo, Boolean>("loadFlag"));
-        loadFlagCol.setCellFactory( tc -> new CheckBoxTableCell<>());
-        tblStudentView.getColumns().add(loadFlagCol);
+        for (Field fld : typeParameterClass.getDeclaredFields()) {
 
-        TableColumn<StudentLoadInfo, String> firstNameCol = new TableColumn<>("First name");
-        firstNameCol.setCellValueFactory(new PropertyValueFactory<StudentLoadInfo, String>("firstName"));
-        tblStudentView.getColumns().add(firstNameCol);
+            String fieldName = fld.getName();
+            if (!CommonUtil.isFieldVisible(fieldName))
+                continue;
 
-        TableColumn<StudentLoadInfo, String> secondNameCol = new TableColumn<>("Second name");
-        secondNameCol.setCellValueFactory(new PropertyValueFactory<StudentLoadInfo, String>("secondName"));
-        tblStudentView.getColumns().add(secondNameCol);
-
-        TableColumn<StudentLoadInfo, String> lastNameCol = new TableColumn<>("Last name");
-        lastNameCol.setCellValueFactory(new PropertyValueFactory<StudentLoadInfo, String>("lastName"));
-        tblStudentView.getColumns().add(lastNameCol);
-
-        TableColumn<StudentLoadInfo, String> birthDateCol = new TableColumn<>("Birth date");
-        birthDateCol.setCellValueFactory(new PropertyValueFactory<StudentLoadInfo, String>("birthDate"));
-        tblStudentView.getColumns().add(birthDateCol);
-
-        TableColumn<StudentLoadInfo, String> errorTextCol = new TableColumn<>("Error text");
-        errorTextCol.setCellValueFactory(new PropertyValueFactory<StudentLoadInfo, String>("errorText"));
-        tblStudentView.getColumns().add(errorTextCol);
-
-        TableColumn<StudentLoadInfo, String> commentCol = new TableColumn<>("Comment");
-        commentCol.setCellValueFactory(new PropertyValueFactory<StudentLoadInfo, String>("comment"));
-        commentCol.setCellFactory(TextFieldTableCell.forTableColumn());
-        commentCol.setOnEditCommit(
-                new EventHandler<TableColumn.CellEditEvent<StudentLoadInfo, String>>() {
-                    @Override
-                    public void handle(TableColumn.CellEditEvent<StudentLoadInfo, String> t) {
-                        ((StudentLoadInfo) t.getTableView().getItems().get(
-                                t.getTablePosition().getRow())
-                        ).setComment(t.getNewValue());
-                    }
+            if (fld.getType().equals(IntegerProperty.class)) {
+                TableColumn<T, Integer> myColumn = new TableColumn<>(CommonUtil.getMapFieldName(fieldName));
+                myColumn.setCellValueFactory(new PropertyValueFactory<T, Integer>(fieldName));
+                myColumn.setId("tc_" + fieldName);
+                tblView.getColumns().add(myColumn);
+            } else if (fld.getType().equals(StringProperty.class)){
+                TableColumn<T, String> myColumn = new TableColumn<>(CommonUtil.getMapFieldName(fieldName));
+                myColumn.setCellValueFactory(new PropertyValueFactory<T, String>(fieldName));
+                myColumn.setId("tc_" + fieldName);
+                if (fld.getName() == "comment") {
+                    myColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+                    myColumn.setOnEditCommit(
+                            new EventHandler<TableColumn.CellEditEvent<T, String>>() {
+                                @Override
+                                public void handle(TableColumn.CellEditEvent<T, String> t) {
+                                    ((StudentLoadInfo) t.getTableView().getItems().get(
+                                            t.getTablePosition().getRow())
+                                    ).setComment(t.getNewValue());
+                                }
+                            }
+                    );
                 }
-        );
-        tblStudentView.getColumns().add(commentCol);
-
+                tblView.getColumns().add(myColumn);
+            } else {
+                TableColumn<T, Boolean> myColumn = new TableColumn<>(CommonUtil.getMapFieldName(fieldName));
+                myColumn.setCellValueFactory(new PropertyValueFactory<T, Boolean>(fieldName));
+                myColumn.setCellFactory( tc -> new CheckBoxTableCell<>());
+                myColumn.setId("tc_" + fieldName);
+                tblView.getColumns().add(myColumn);
+            }
+            columnList.add(fieldName);
+        }
         /*
-        errorTextCol.setCellFactory(column -> {
-            return new TableCell<StudentLoadInfo, String>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-
-                    if (item == null) {
-                        setStyle("");
-                        return;
-                    }
-
-                    StudentLoadInfo studentInfo = getTableView().getItems().get(getIndex());
-
-                    if (!studentInfo.getErrorText().isEmpty()) {
-                        setStyle("-fx-background-color: lightgreen");
-                    }
-                }
-            };
-        });
-        */
-
-        tblStudentView.setRowFactory(row -> new TableRow<StudentLoadInfo>() {
+        tblStudentView.setRowFactory(row -> new TableRow<T>() {
 
             @Override
-            public void updateItem(StudentLoadInfo item, boolean empty) {
+            public void updateItem(T item, boolean empty) {
                 super.updateItem(item, empty);
 
                 if (item == null || empty) {
@@ -135,19 +128,19 @@ public class PreloadFormController {
                     return;
                 }
 
-                if (!item.getErrorText().isEmpty()) {
+                if (!((StudentLoadInfo) item).getErrorText().isEmpty()) {
                     setStyle("-fx-background-color: lightgreen");
                 }
             }
         });
+        */
+        AnchorPane.setLeftAnchor(tblView, 0.0);
+        AnchorPane.setRightAnchor(tblView, 0.0);
+        AnchorPane.setTopAnchor(tblView, 0.0);
+        AnchorPane.setBottomAnchor(tblView, 50.0);
 
-        AnchorPane.setLeftAnchor(tblStudentView, 0.0);
-        AnchorPane.setRightAnchor(tblStudentView, 0.0);
-        AnchorPane.setTopAnchor(tblStudentView, 0.0);
-        AnchorPane.setBottomAnchor(tblStudentView, 50.0);
-
-        tblStudentView.setItems(studentInfoObsList);
-        pane.getChildren().add(tblStudentView);
+        tblView.setItems(entityInfoObsList);
+        pane.getChildren().add(tblView);
 
         HBox btnList = new HBox();
         AnchorPane.setBottomAnchor(btnList, 0.0);
@@ -164,7 +157,7 @@ public class PreloadFormController {
         btnOK.addEventHandler(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                loadStudentsInDB();
+                loadEntitiesInDB();
                 refreshData = true;
                 stage.close();
             }
@@ -179,18 +172,28 @@ public class PreloadFormController {
         });
     }
 
+    // -----Load entity in DB -----
+    private void loadEntitiesInDB() {
+        if (typeParameterClass.equals(StudentLoadInfo.class))
+            loadStudentsInDB();
+        else if (typeParameterClass.equals(TeacherLoadInfo.class))
+            loadTeacherInDB();
+    }
+
     private void loadStudentsInDB() {
         StudentManager studentManager = new StudentManager();
-        for (StudentLoadInfo studentInfo : tblStudentView.getItems()) {
-            if (!studentInfo.isLoadFlag())
+        for (T studentInfo : tblView.getItems()) {
+            StudentLoadInfo info = ((StudentLoadInfo) studentInfo);
+
+            if (!info.isLoadFlag())
                 continue;
 
             Student student = new Student();
-            student.setFirstName(studentInfo.getFirstName());
-            student.setSecondName(studentInfo.getSecondName());
-            student.setLastName(studentInfo.getLastName());
-            student.setBirthDate(studentInfo.getBirthDate());
-            student.setComment(studentInfo.getComment());
+            student.setFirstName(info.getFirstName());
+            student.setSecondName(info.getSecondName());
+            student.setLastName(info.getLastName());
+            student.setBirthDate(info.getBirthDate());
+            student.setComment(info.getComment());
 
             DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
             student.setCreateDate(sourceFormat.format(new Date()));
@@ -198,8 +201,42 @@ public class PreloadFormController {
         }
     }
 
+    private void loadTeacherInDB() {
+        TeacherManager teacherManager = new TeacherManager();
+        for (T teacherInfo : tblView.getItems()) {
+            TeacherLoadInfo info = ((TeacherLoadInfo) teacherInfo);
+
+            if (!info.isLoadFlag())
+                continue;
+
+            Teacher teacher = new Teacher();
+            teacher.setFirstName(info.getFirstName());
+            teacher.setSecondName(info.getSecondName());
+            teacher.setLastName(info.getLastName());
+            teacher.setBirthDate(info.getBirthDate());
+            teacher.setStartWorkDate(info.getStartWorkDate());
+            teacher.setEndWorkDate(info.getEndWorkDate());
+            teacher.setComment(info.getComment());
+
+            DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
+            teacher.setCreateDate(sourceFormat.format(new Date()));
+            teacherManager.createTeacher(teacher);
+        }
+    }
+    // ----------------------------
+
     public boolean mustRefreshData() {
         return refreshData;
+    }
+
+    private void setEntityInfoObsList() {
+        if (typeParameterClass.equals(StudentLoadInfo.class)) {
+            StudentManager studentManager = new StudentManager();
+            entityInfoObsList = (ObservableList<T>) studentManager.getStudentLoadList((List<StudentLoadInfo>) dataList);
+        } else if (typeParameterClass.equals(TeacherLoadInfo.class)) {
+            TeacherManager teacherManager = new TeacherManager();
+            entityInfoObsList = (ObservableList<T>) teacherManager.getTeacherLoadList((List<TeacherLoadInfo>) dataList);
+        }
     }
 
 }

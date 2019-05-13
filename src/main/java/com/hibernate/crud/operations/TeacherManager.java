@@ -14,6 +14,7 @@ import org.hibernate.query.Query;
 import org.russianfeature.model.Student;
 import org.russianfeature.model.StudentLoadInfo;
 import org.russianfeature.model.Teacher;
+import org.russianfeature.model.TeacherLoadInfo;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -114,22 +115,23 @@ public class TeacherManager implements ITeacherManager {
         return teacherList;
     }
 
-    /*
-    public ObservableList<StudentLoadInfo> getStudentLoadList(List<StudentLoadInfo> studentInfoList) {
+    public ObservableList<TeacherLoadInfo> getTeacherLoadList(List<TeacherLoadInfo> teacherInfoList) {
         Session session = HibernateUtil.beginTransaction();
         // Delete all rows from temp table
-        Query queryDeleteAll = session.createSQLQuery("delete from student_tmp");
+        Query queryDeleteAll = session.createSQLQuery("delete from teacher_tmp");
         queryDeleteAll.executeUpdate();
 
         // Insert rows into temp table
-        Query queryInsert = session.createSQLQuery("INSERT INTO student_tmp " +
-                "(firstName, secondName, lastName, birthDate) " +
-                "VALUES (:val1, :val2, :val3, :val4)");
-        for (StudentLoadInfo stInfo : studentInfoList) {
-            queryInsert.setParameter("val1", stInfo.getFirstName());
-            queryInsert.setParameter("val2", stInfo.getSecondName());
-            queryInsert.setParameter("val3", stInfo.getLastName());
-            queryInsert.setParameter("val4", stInfo.getBirthDate());
+        Query queryInsert = session.createSQLQuery("INSERT INTO teacher_tmp " +
+                "(firstName, secondName, lastName, birthDate, startWorkDate, endWorkDate) " +
+                "VALUES (:val1, :val2, :val3, :val4, :val5, :val6)");
+        for (TeacherLoadInfo tInfo : teacherInfoList) {
+            queryInsert.setParameter("val1", tInfo.getFirstName());
+            queryInsert.setParameter("val2", tInfo.getSecondName());
+            queryInsert.setParameter("val3", tInfo.getLastName());
+            queryInsert.setParameter("val4", tInfo.getBirthDate());
+            queryInsert.setParameter("val5", tInfo.getStartWorkDate());
+            queryInsert.setParameter("val6", tInfo.getEndWorkDate());
             queryInsert.executeUpdate();
         }
         HibernateUtil.commitTransaction();
@@ -138,13 +140,13 @@ public class TeacherManager implements ITeacherManager {
         session = HibernateUtil.beginTransaction();
         Query queryDublicates = session.createSQLQuery(
                 "SELECT\n" +
-                        "\tst.firstName, st.secondName, st.lastName, st.birthDate,\n" +
+                        "\tst.firstName, st.secondName, st.lastName, st.birthDate, st.startWorkDate, st.endWorkDate,\n" +
                         "\tCASE\n" +
                         "\t\tWHEN s.firstName is not null then 1\n" +
                         "\t\telse 0\n" +
                         "\tend as isDublicate\n" +
-                        "from student_tmp as st\n" +
-                        "left join student as s\n" +
+                        "from teacher_tmp as st\n" +
+                        "left join teacher as s\n" +
                         "\ton st.firstName = s.firstName\n" +
                         "\tand st.secondName = s.secondName\n" +
                         "\tand st.lastName = s.lastName\n" +
@@ -152,36 +154,58 @@ public class TeacherManager implements ITeacherManager {
                 //+"where s.firstName is null"
         );
 
-        ObservableList<StudentLoadInfo> studentInfoObsList = FXCollections.observableArrayList();
+        ObservableList<TeacherLoadInfo> teacherInfoObsList = FXCollections.observableArrayList();
         List<Object[]> rows = queryDublicates.list();
         HibernateUtil.commitTransaction();
         for (Object[] row : rows) {
-            StudentLoadInfo stInfo = new StudentLoadInfo();
-            stInfo.setFirstName(row[0].toString());
-            stInfo.setSecondName(row[1].toString());
-            stInfo.setLastName(row[2].toString());
+            TeacherLoadInfo tInfo = new TeacherLoadInfo();
+            tInfo.setFirstName(row[0].toString());
+            tInfo.setSecondName(row[1].toString());
+            tInfo.setLastName(row[2].toString());
 
-            String birthDate = row[3].toString();
             DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
             try {
+                String birthDate = row[3].toString();
                 Date date = sourceFormat.parse(birthDate);
-                stInfo.setBirthDate(sourceFormat.format(date));
+                tInfo.setBirthDate(sourceFormat.format(date));
             } catch (ParseException e) {
-                stInfo.setErrorText("Не верный формат даты рождения.");
+                tInfo.setErrorText("Не верный формат даты рождения.");
                 e.printStackTrace();
             }
 
-            stInfo.setLoadFlag(true);
-            if (row[4].toString().equals("1")) {
-                stInfo.setErrorText("Найден дубль");
-                stInfo.setDublicateFlag(true);
-                stInfo.setLoadFlag(false);
+            String startWorkDate = row[4].toString();
+            if (!startWorkDate.isEmpty()) {
+                try {
+                    Date date = sourceFormat.parse(startWorkDate);
+                    tInfo.setStartWorkDate(sourceFormat.format(date));
+                } catch (ParseException e) {
+                    tInfo.setErrorText("Не верный формат даты начал.");
+                    e.printStackTrace();
+                }
             }
 
-            studentInfoObsList.add(stInfo);
+            String endWorkDate = row[5].toString();
+            if (!endWorkDate.isEmpty()) {
+                try {
+                    Date date = sourceFormat.parse(endWorkDate);
+                    tInfo.setEndWorkDate(sourceFormat.format(date));
+                } catch (ParseException e) {
+                    tInfo.setErrorText("Не верный формат даты начала работы.");
+                    e.printStackTrace();
+                }
+            }
+
+            tInfo.setLoadFlag(true);
+            if (row[6].toString().equals("1")) {
+                tInfo.setErrorText("Найден дубль");
+                tInfo.setDublicateFlag(true);
+                tInfo.setLoadFlag(false);
+            }
+
+            teacherInfoObsList.add(tInfo);
         }
 
-        return studentInfoObsList;
+        return teacherInfoObsList;
     }
-    */
+
 }

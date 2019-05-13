@@ -19,12 +19,17 @@
                   <Font size="20.0" />
                </font>
             </Button>
-            <Button fx:id="btnLessons" mnemonicParsing="false" prefHeight="180.0" prefWidth="180.0" text="Занятия">
+            <Button fx:id="btnLessons" mnemonicParsing="false" prefHeight="180.0" prefWidth="180.0" text="Должности">
                <font>
                   <Font size="20.0" />
                </font>
             </Button>
             <Button fx:id="btnGroups" mnemonicParsing="false" prefHeight="180.0" prefWidth="180.0" text="Группы">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnGroupType" mnemonicParsing="false" onAction="#btnGroupTypeOnClick" prefHeight="180.0" prefWidth="180.0" text="Виды групп">
                <font>
                   <Font size="20.0" />
                </font>

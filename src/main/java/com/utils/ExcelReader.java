@@ -7,6 +7,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.*;
 import org.russianfeature.model.Student;
 import org.russianfeature.model.StudentLoadInfo;
+import org.russianfeature.model.TeacherLoadInfo;
 
 import java.io.File;
 import java.io.IOException;
@@ -144,5 +145,45 @@ public class ExcelReader {
 
         // Closing the workbook
         workbook.close();
+    }
+
+    public static List<TeacherLoadInfo> getTeacherListFromExcel(File loadFile) throws IOException, InvalidFormatException {
+        Workbook workbook = WorkbookFactory.create(loadFile);
+        Sheet sheet = workbook.getSheetAt(0);
+        DataFormatter dataFormatter = new DataFormatter();
+
+        ObservableList<TeacherLoadInfo> teacheLoadInfoList = FXCollections.observableArrayList();
+
+        int rowIndex = 0;
+        for (Row row: sheet) {
+            if (rowIndex == 0) {
+                rowIndex++;
+                continue;
+            }
+            int cellIndex = 0;
+            TeacherLoadInfo tInfo = new TeacherLoadInfo();
+            //studentInfo.setLoadFlag(false);
+            for(Cell cell: row) {
+                String cellValue = dataFormatter.formatCellValue(cell);
+                if (cellIndex == 0)
+                    tInfo.setFirstName(cellValue);
+                else if (cellIndex == 1)
+                    tInfo.setSecondName(cellValue);
+                else if (cellIndex == 2)
+                    tInfo.setLastName(cellValue);
+                else if (cellIndex == 3)
+                    tInfo.setBirthDate(cellValue);
+                else if (cellIndex == 4)
+                    tInfo.setComment(cellValue);
+
+                cellIndex++;
+            }
+            teacheLoadInfoList.add(tInfo);
+        }
+
+        workbook.close();
+
+        return teacheLoadInfoList;
+
     }
 }

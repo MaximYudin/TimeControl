@@ -8,17 +8,17 @@ import java.util.Map;
 
 public interface ITeacherManager {
 
-    Teacher findByTeacherName(String name, String surname);
+    Teacher findByName(String name, String surname);
 
-    void deleteTeacher(Teacher student);
+    void delete(Teacher entity);
 
-    List<Teacher> getAllTeacher();
+    List<Teacher> getAll();
 
-    Teacher findTeacherById(int id);
+    Teacher findById(int id);
 
-    void saveTeacher(Teacher student);
+    void save(Teacher entity);
 
-    void createTeacher(Teacher student);
+    void create(Teacher entity);
 
     List<Teacher> getDoubles(Map<String, String> params);
 

@@ -1,8 +1,6 @@
 package com.hibernate.crud.operations;
 
-import com.hibernate.crud.operations.dao.StudentDAO;
 import com.hibernate.crud.operations.dao.TeacherDAO;
-import com.hibernate.crud.operations.idao.IStudentDAO;
 import com.hibernate.crud.operations.idao.ITeacherDAO;
 import com.hibernate.crud.operations.idao.ITeacherManager;
 import javafx.collections.FXCollections;
@@ -11,11 +9,8 @@ import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.russianfeature.model.Student;
-import org.russianfeature.model.StudentLoadInfo;
 import org.russianfeature.model.Teacher;
 import org.russianfeature.model.TeacherLoadInfo;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,7 +20,7 @@ public class TeacherManager implements ITeacherManager {
     private ITeacherDAO teacherDAO = new TeacherDAO();
 
     @Override
-    public Teacher findByTeacherName(String name, String surname) {
+    public Teacher findByName(String name, String surname) {
         Teacher teacher = null;
         try {
             HibernateUtil.beginTransaction();
@@ -40,7 +35,7 @@ public class TeacherManager implements ITeacherManager {
     }
 
     @Override
-    public void deleteTeacher(Teacher teacher) {
+    public void delete(Teacher teacher) {
         try {
             HibernateUtil.beginTransaction();
             teacherDAO.delete(teacher);
@@ -52,7 +47,7 @@ public class TeacherManager implements ITeacherManager {
     }
 
     @Override
-    public List<Teacher> getAllTeacher() {
+    public List<Teacher> getAll() {
         List<Teacher> teacherList = new ArrayList<>();
         try {
             HibernateUtil.beginTransaction();
@@ -65,7 +60,7 @@ public class TeacherManager implements ITeacherManager {
     }
 
     @Override
-    public Teacher findTeacherById(int id) {
+    public Teacher findById(int id) {
         Teacher teacher = null;
         try {
             HibernateUtil.beginTransaction();
@@ -78,7 +73,7 @@ public class TeacherManager implements ITeacherManager {
     }
 
     @Override
-    public void saveTeacher(Teacher teacher) {
+    public void save(Teacher teacher) {
         try {
             HibernateUtil.beginTransaction();
             teacherDAO.save(teacher);
@@ -91,7 +86,7 @@ public class TeacherManager implements ITeacherManager {
     }
 
     @Override
-    public void createTeacher(Teacher teacher) {
+    public void create(Teacher teacher) {
         try {
             HibernateUtil.beginTransaction();
             teacherDAO.create(teacher);

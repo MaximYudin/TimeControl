@@ -7,17 +7,17 @@ import java.util.Map;
 
 public interface IStudentManger {
 
-    Student findByStudentName(String name, String surname);
+    Student findByName(String name, String surname);
 
-    void deleteStudent(Student student);
+    void delete(Student entity);
 
-    List<Student> getAllStudent();
+    List<Student> getAll();
 
-    Student findStudentById(int id);
+    Student findById(int id);
 
-    void saveStudent(Student student);
+    void save(Student entity);
 
-    void createStudent(Student student);
+    void create(Student entity);
 
     List<Student> getDoubles(Map<String, String> params);
 

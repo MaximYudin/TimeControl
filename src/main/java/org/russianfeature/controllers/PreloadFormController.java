@@ -197,7 +197,7 @@ public class PreloadFormController<T> {
 
             DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
             student.setCreateDate(sourceFormat.format(new Date()));
-            studentManager.createStudent(student);
+            studentManager.create(student);
         }
     }
 
@@ -220,7 +220,7 @@ public class PreloadFormController<T> {
 
             DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
             teacher.setCreateDate(sourceFormat.format(new Date()));
-            teacherManager.createTeacher(teacher);
+            teacherManager.create(teacher);
         }
     }
     // ----------------------------

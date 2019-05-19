@@ -19,7 +19,7 @@ import java.util.*;
 public class StudentManager implements IStudentManger {
     private IStudentDAO studentDAO = new StudentDAO();
     @Override
-    public Student findByStudentName(String name, String surname) {
+    public Student findByName(String name, String surname) {
         Student student = null;
         try {
             HibernateUtil.beginTransaction();
@@ -34,7 +34,7 @@ public class StudentManager implements IStudentManger {
     }
 
     @Override
-    public void deleteStudent(Student student) {
+    public void delete(Student student) {
         try {
             HibernateUtil.beginTransaction();
             studentDAO.delete(student);
@@ -46,7 +46,7 @@ public class StudentManager implements IStudentManger {
     }
 
     @Override
-    public List<Student> getAllStudent() {
+    public List<Student> getAll() {
         List<Student> studentList = new ArrayList<Student>();
         try {
             HibernateUtil.beginTransaction();
@@ -59,7 +59,7 @@ public class StudentManager implements IStudentManger {
     }
 
     @Override
-    public Student findStudentById(int id) {
+    public Student findById(int id) {
         Student student = null;
         try {
             HibernateUtil.beginTransaction();
@@ -72,7 +72,7 @@ public class StudentManager implements IStudentManger {
     }
 
     @Override
-    public void saveStudent(Student student) {
+    public void save(Student student) {
         try {
             HibernateUtil.beginTransaction();
             studentDAO.save(student);
@@ -85,7 +85,7 @@ public class StudentManager implements IStudentManger {
     }
 
     @Override
-    public void createStudent(Student student) {
+    public void create(Student student) {
         try {
             HibernateUtil.beginTransaction();
             studentDAO.create(student);

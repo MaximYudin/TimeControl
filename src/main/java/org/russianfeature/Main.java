@@ -1,23 +1,27 @@
 package org.russianfeature;
 
+import com.hibernate.crud.operations.UserManager;
 import com.utils.Config;
 import com.utils.EnumAction;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.Set;
 
 import org.russianfeature.controllers.*;
 import org.russianfeature.controllers.dictionary.DictionaryListFormController;
 import org.russianfeature.controllers.dictionary.StudentEditFormController;
 import org.russianfeature.controllers.dictionary.StudentsListFormController;
+import org.russianfeature.model.GroupDOO;
 import org.russianfeature.model.Student;
-import org.russianfeature.model.Teacher;
+import org.russianfeature.model.User;
+
 
 public class Main extends Application {
 
@@ -165,29 +169,13 @@ public class Main extends Application {
 
     public void showGroupsWorkPlace() {
 
-        try {
+        removeWorkPlace("dictionaryGroupDOO");
 
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/fxml/GroupsForm.fxml"));
-            AnchorPane workPlace = (AnchorPane) loader.load();
+        showDictionaryMain(GroupDOO.class);
 
-            if (isValidToShowWorkPlace(workPlace))
-                return;
-
-            root.getChildren().add(workPlace);
-            workPlace.setId("groupsWorkPlace");
-
-            currentWorkPlace = workPlace;
-
-            // Bind controller and main app
-            GroupsFormController controller = loader.getController();
-            controller.setMainApp(this);
-            controller.setPlaceProperty();
-
-
-        } catch (IOException e) {
-            System.out.printf(e.toString());
-        }
+        Node lbl = getRoot().lookup("#programCaption");
+        if (lbl != null)
+            ((Label) lbl).setText("Группы ДОО");
 
     }
 
@@ -411,6 +399,8 @@ public class Main extends Application {
         if (!currentWorkPalceId.equals(NewPlaceId)) {
             AnchorPane delPanel = (AnchorPane) this.getRoot().lookup("#" + currentWorkPalceId);
             this.getRoot().getChildren().remove(delPanel);
+
+            System.gc();
         }
     }
 

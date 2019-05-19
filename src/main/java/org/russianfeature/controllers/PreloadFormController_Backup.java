@@ -198,7 +198,7 @@ public class PreloadFormController_Backup {
 
             DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
             student.setCreateDate(sourceFormat.format(new Date()));
-            studentManager.createStudent(student);
+            studentManager.create(student);
         }
     }
 

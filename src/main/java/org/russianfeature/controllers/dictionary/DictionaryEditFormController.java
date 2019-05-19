@@ -1,8 +1,6 @@
 package org.russianfeature.controllers.dictionary;
 
-import com.hibernate.crud.operations.GroupTypeManager;
-import com.hibernate.crud.operations.StudentManager;
-import com.hibernate.crud.operations.TeacherManager;
+import com.hibernate.crud.operations.*;
 import com.utils.CommonUtil;
 import com.utils.EnumAction;
 import com.utils.EnumYesNo;
@@ -29,9 +27,7 @@ import javafx.util.Callback;
 import javafx.util.StringConverter;
 import org.russianfeature.Main;
 import org.russianfeature.controllers.QuestionYeaNoController;
-import org.russianfeature.model.GroupType;
-import org.russianfeature.model.Student;
-import org.russianfeature.model.Teacher;
+import org.russianfeature.model.*;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -355,6 +351,7 @@ public class DictionaryEditFormController<T> {
         return (msgError.toString().isEmpty() ? true : false);
     }
 
+    // ----- Get doubles list for entity
     private ObservableList<T> getDoublesList() {
         if (typeParameterClass.equals(Student.class))
             return getDoublesStudentList();
@@ -362,6 +359,14 @@ public class DictionaryEditFormController<T> {
             return getDoublesTeacherList();
         if (typeParameterClass.equals(GroupType.class))
             return getDoublesGroupTypeList();
+        if (typeParameterClass.equals(GroupDOO.class))
+            return getDoublesGroupDOOList();
+        if (typeParameterClass.equals(Lesson.class))
+            return getDoublesLessonList();
+        if (typeParameterClass.equals(Position.class))
+            return getDoublesPositionList();
+        if (typeParameterClass.equals(Regime.class))
+            return getDoublesRegimeList();
 
         return null;
     }
@@ -497,6 +502,111 @@ public class DictionaryEditFormController<T> {
         return gtoList;
     }
 
+    private ObservableList<T> getDoublesGroupDOOList() {
+
+        Node groupName = dictionaryMainEdit.lookup("#groupName");
+        if (groupName == null)
+            return null;
+
+        Map<String, String> params = new HashMap<>();
+
+        if (action == EnumAction.UPDATE)
+            params.put("id", ((GroupDOO) currentEntity).getId().toString());
+        else
+            params.put("id", "0");
+
+        params.put("groupName", ((TextField) groupName).getText());
+
+        GroupDOOManager gtm = new GroupDOOManager();
+        ObservableList<T> gtoList = FXCollections.observableArrayList();
+        List<T> gtList = (List<T>) gtm.getDoubles(params);
+
+        for (T gt : gtList) {
+            gtoList.add(gt);
+        }
+
+        return gtoList;
+    }
+
+    private ObservableList<T> getDoublesLessonList() {
+
+        Node name = dictionaryMainEdit.lookup("#name");
+        if (name == null)
+            return null;
+
+        Map<String, String> params = new HashMap<>();
+
+        if (action == EnumAction.UPDATE)
+            params.put("id", ((Lesson) currentEntity).getId().toString());
+        else
+            params.put("id", "0");
+
+        params.put("name", ((TextField) name).getText());
+
+        LessonManager gtm = new LessonManager();
+        ObservableList<T> gtoList = FXCollections.observableArrayList();
+        List<T> gtList = (List<T>) gtm.getDoubles(params);
+
+        for (T gt : gtList) {
+            gtoList.add(gt);
+        }
+
+        return gtoList;
+    }
+
+    private ObservableList<T> getDoublesPositionList() {
+
+        Node name = dictionaryMainEdit.lookup("#name");
+        if (name == null)
+            return null;
+
+        Map<String, String> params = new HashMap<>();
+
+        if (action == EnumAction.UPDATE)
+            params.put("id", ((Position) currentEntity).getId().toString());
+        else
+            params.put("id", "0");
+
+        params.put("name", ((TextField) name).getText());
+
+        PositionManager gtm = new PositionManager();
+        ObservableList<T> gtoList = FXCollections.observableArrayList();
+        List<T> gtList = (List<T>) gtm.getDoubles(params);
+
+        for (T gt : gtList) {
+            gtoList.add(gt);
+        }
+
+        return gtoList;
+    }
+
+    private ObservableList<T> getDoublesRegimeList() {
+
+        Node name = dictionaryMainEdit.lookup("#name");
+        if (name == null)
+            return null;
+
+        Map<String, String> params = new HashMap<>();
+
+        if (action == EnumAction.UPDATE)
+            params.put("id", ((Regime) currentEntity).getId().toString());
+        else
+            params.put("id", "0");
+
+        params.put("name", ((TextField) name).getText());
+
+        RegimeManager gtm = new RegimeManager();
+        ObservableList<T> gtoList = FXCollections.observableArrayList();
+        List<T> gtList = (List<T>) gtm.getDoubles(params);
+
+        for (T gt : gtList) {
+            gtoList.add(gt);
+        }
+
+        return gtoList;
+    }
+    // ----- END -----
+
     void saveEntity() {
 
         StringBuilder sbMsgText = new StringBuilder();
@@ -562,6 +672,7 @@ public class DictionaryEditFormController<T> {
             createStudent();
     }
 
+    // ----- Update entity -----
     private void updateEntity() {
         if (typeParameterClass.equals(Student.class))
             updateStudent();
@@ -569,8 +680,61 @@ public class DictionaryEditFormController<T> {
             updateTeacher();
         else if (typeParameterClass.equals(GroupType.class))
             updateGroupType();
+        else if (typeParameterClass.equals(GroupDOO.class))
+            updateGroupDOO();
+        else if (typeParameterClass.equals(Lesson.class))
+            updateLesson();
+        else if (typeParameterClass.equals(Position.class))
+            updatePosition();
+        else if (typeParameterClass.equals(Regime.class))
+            updateRegime();
     }
 
+    void updateStudent() {
+        StudentManager studentManager = new StudentManager();
+        setEntityProperty();
+        //studentManager.save((Student) entity);
+        studentManager.save((Student) currentEntity);
+    }
+
+    void updateTeacher() {
+        TeacherManager teacherManager = new TeacherManager();
+        setEntityProperty();
+        teacherManager.save((Teacher) currentEntity);
+    }
+
+    void updateGroupType() {
+        GroupTypeManager gtManager = new GroupTypeManager();
+        setEntityProperty();
+        gtManager.save((GroupType) currentEntity);
+    }
+
+    void updateGroupDOO() {
+        GroupDOOManager gtManager = new GroupDOOManager();
+        setEntityProperty();
+        gtManager.save((GroupDOO) currentEntity);
+    }
+
+    void updateLesson() {
+        LessonManager gtManager = new LessonManager();
+        setEntityProperty();
+        gtManager.save((Lesson) currentEntity);
+    }
+
+    void updatePosition() {
+        PositionManager gtManager = new PositionManager();
+        setEntityProperty();
+        gtManager.save((Position) currentEntity);
+    }
+
+    void updateRegime() {
+        RegimeManager gtManager = new RegimeManager();
+        setEntityProperty();
+        gtManager.save((Regime) currentEntity);
+    }
+    // ----- END -----
+
+    // ----- Create entity -----
     private void createEtnity() {
         if (typeParameterClass.equals(Student.class))
             createStudent();
@@ -578,58 +742,81 @@ public class DictionaryEditFormController<T> {
             createTeacher();
         else if (typeParameterClass.equals(GroupType.class))
             createGroupType();
-    }
-
-    void updateStudent() {
-        StudentManager studentManager = new StudentManager();
-        setEntityProperty((T) entity);
-        //setStudentProperty((Student) entity);
-        studentManager.saveStudent((Student) entity);
-    }
-
-    void updateTeacher() {
-        TeacherManager teacherManager = new TeacherManager();
-        setEntityProperty((T) currentEntity);
-        teacherManager.saveTeacher((Teacher) currentEntity);
-    }
-
-    void updateGroupType() {
-        GroupTypeManager gtManager = new GroupTypeManager();
-        setEntityProperty((T) currentEntity);
-        gtManager.saveGroupType((GroupType) currentEntity);
+        else if (typeParameterClass.equals(GroupDOO.class))
+            createGroupDOO();
+        else if (typeParameterClass.equals(Lesson.class))
+            createLesson();
+        else if (typeParameterClass.equals(Position.class))
+            createPosition();
+        else if (typeParameterClass.equals(Regime.class))
+            createRegime();
     }
 
     void createStudent() {
         StudentManager studentManager = new StudentManager();
 
-        Student newStudent = new Student();
-        setEntityProperty((T) newStudent);
-        //setStudentProperty(newStudent);
-        studentManager.saveStudent(newStudent);
-        entity = (T) newStudent;
+        currentEntity = (T) new Student();
+        setEntityProperty();
+        studentManager.save((Student) currentEntity);
     }
 
     void createTeacher() {
         TeacherManager teacherManager = new TeacherManager();
 
-        Teacher newTeacher = new Teacher();
-        setEntityProperty((T) newTeacher);
-        //setStudentProperty(newStudent);
-        teacherManager.saveTeacher(newTeacher);
-        entity = (T) newTeacher;
+        currentEntity = (T) new Teacher();
+        setEntityProperty();
+        teacherManager.save((Teacher) currentEntity);
     }
 
     void createGroupType() {
         GroupTypeManager gtManager = new GroupTypeManager();
 
-        GroupType newGT = new GroupType();
-        setEntityProperty((T) newGT);
-        //setStudentProperty(newStudent);
-        gtManager.saveGroupType(newGT);
-        entity = (T) newGT;
+        currentEntity = (T) new GroupType();
+        setEntityProperty();
+        gtManager.save((GroupType) currentEntity);
     }
 
-    void setEntityProperty(T entity) {
+    void createGroupDOO() {
+        GroupDOOManager gtManager = new GroupDOOManager();
+
+
+        UserManager um = new UserManager();
+        User user = um.findById(2);
+        GroupDOO grp = new GroupDOO();
+        grp.setUser(user);
+        currentEntity = (T) grp;
+
+        //currentEntity = (T) new GroupDOO();
+        setEntityProperty();
+        gtManager.save((GroupDOO) currentEntity);
+    }
+
+    void createLesson() {
+        LessonManager gtManager = new LessonManager();
+
+        currentEntity = (T) new Lesson();
+        setEntityProperty();
+        gtManager.save((Lesson) currentEntity);
+    }
+
+    void createPosition() {
+        PositionManager gtManager = new PositionManager();
+
+        currentEntity = (T) new Position();
+        setEntityProperty();
+        gtManager.save((Position) currentEntity);
+    }
+
+    void createRegime() {
+        RegimeManager gtManager = new RegimeManager();
+
+        currentEntity = (T) new Regime();
+        setEntityProperty();
+        gtManager.save((Regime) currentEntity);
+    }
+    // ----- END -----
+
+    void setEntityProperty() {
 
         DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
 
@@ -652,8 +839,8 @@ public class DictionaryEditFormController<T> {
                         //DateFormat sourceFormat = new SimpleDateFormat("dd.MM.yyyy");
                         Date date = sourceFormat.parse(((DatePicker) node).getEditor().getText());
                         //entity.setBirthDate(sourceFormat.format(date));
-                        method = entity.getClass().getMethod("set" + CommonUtil.convertFirstLetterToUpperCase(fieldName), args);
-                        method.invoke(entity, sourceFormat.format(date));
+                        method = currentEntity.getClass().getMethod("set" + CommonUtil.convertFirstLetterToUpperCase(fieldName), args);
+                        method.invoke(currentEntity, sourceFormat.format(date));
                     }
                     catch (ParseException e) {e.printStackTrace();}
                     catch (NoSuchMethodException exc) { exc.printStackTrace(); }
@@ -663,8 +850,8 @@ public class DictionaryEditFormController<T> {
             } else {
 
                     try {
-                        method = entity.getClass().getMethod("set" + CommonUtil.convertFirstLetterToUpperCase(fieldName), args);
-                        method.invoke(entity, ((TextField) node).getText());
+                        method = currentEntity.getClass().getMethod("set" + CommonUtil.convertFirstLetterToUpperCase(fieldName), args);
+                        method.invoke(currentEntity, ((TextField) node).getText());
                     }
                     catch (NoSuchMethodException exc) { exc.printStackTrace(); }
                     catch (IllegalAccessException exc) { exc.printStackTrace(); }
@@ -677,16 +864,16 @@ public class DictionaryEditFormController<T> {
             Date dt = new Date();
             String dateToDB = sourceFormat.format(dt);
             try {
-                method = entity.getClass().getMethod("setCreateDate", args);
-                method.invoke(entity, dateToDB);
+                method = currentEntity.getClass().getMethod("setCreateDate", args);
+                method.invoke(currentEntity, dateToDB);
             }
             catch (NoSuchMethodException exc) { exc.printStackTrace(); }
             catch (IllegalAccessException exc) { exc.printStackTrace(); }
             catch (InvocationTargetException exc) { exc.printStackTrace(); }
 
             try {
-                method = entity.getClass().getMethod("setLastEditDate", args);
-                method.invoke(entity, dateToDB);
+                method = currentEntity.getClass().getMethod("setLastEditDate", args);
+                method.invoke(currentEntity, dateToDB);
             }
             catch (NoSuchMethodException exc) { exc.printStackTrace(); }
             catch (IllegalAccessException exc) { exc.printStackTrace(); }

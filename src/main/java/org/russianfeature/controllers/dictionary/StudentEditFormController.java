@@ -178,7 +178,7 @@ public class StudentEditFormController {
     void updateStudent() {
         StudentManager studentManager = new StudentManager();
         setStudentProperty(student);
-        studentManager.saveStudent(student);
+        studentManager.save(student);
     }
 
     @FXML
@@ -217,7 +217,7 @@ public class StudentEditFormController {
         StudentManager studentManager = new StudentManager();
         Student newStudent = new Student();
         setStudentProperty(newStudent);
-        studentManager.saveStudent(newStudent);
+        studentManager.save(newStudent);
         student = newStudent;
     }
 

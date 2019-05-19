@@ -8,17 +8,17 @@ import java.util.Map;
 
 public interface IGroupTypeManager {
 
-    GroupType findByGroupTypeName(String name);
+    GroupType findByName(String name);
 
-    void deleteGroupType(GroupType student);
+    void delete(GroupType student);
 
-    List<GroupType> getAllGroupType();
+    List<GroupType> getAll();
 
-    GroupType findGroupTypeById(int id);
+    GroupType findById(int id);
 
-    void saveGroupType(GroupType gt);
+    void save(GroupType gt);
 
-    void createGroupType(GroupType gt);
+    void create(GroupType gt);
 
     List<GroupType> getDoubles(Map<String, String> params);
 

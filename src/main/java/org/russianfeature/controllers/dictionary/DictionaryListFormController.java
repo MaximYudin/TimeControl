@@ -1,8 +1,6 @@
 package org.russianfeature.controllers.dictionary;
 
-import com.hibernate.crud.operations.GroupTypeManager;
-import com.hibernate.crud.operations.StudentManager;
-import com.hibernate.crud.operations.TeacherManager;
+import com.hibernate.crud.operations.*;
 import com.utils.*;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
@@ -26,10 +24,7 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.russianfeature.Main;
 import org.russianfeature.controllers.PreloadFormController;
 import org.russianfeature.controllers.QuestionYeaNoController;
-import org.russianfeature.model.GroupType;
-import org.russianfeature.model.Student;
-import org.russianfeature.model.StudentLoadInfo;
-import org.russianfeature.model.Teacher;
+import org.russianfeature.model.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -37,9 +32,7 @@ import java.lang.reflect.Field;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class DictionaryListFormController<T> {
 
@@ -202,33 +195,68 @@ public class DictionaryListFormController<T> {
 
     // ----- Delete entity -----
     private void deleteEntities(ObservableList<T> selectedEntity) {
-        if (typeParameterClass.equals(Student.class)) {
+        if (typeParameterClass.equals(Student.class))
             deleteStudents(selectedEntity);
-        } else if (typeParameterClass.equals(Teacher.class)) {
+        else if (typeParameterClass.equals(Teacher.class))
             deleteTeachers(selectedEntity);
-        } else if (typeParameterClass.equals(GroupType.class)) {
+        else if (typeParameterClass.equals(GroupType.class))
             deleteGroupType(selectedEntity);
-        }
+        else if (typeParameterClass.equals(GroupDOO.class))
+            deleteGroupDOO(selectedEntity);
+        else if (typeParameterClass.equals(Lesson.class))
+            deleteLesson(selectedEntity);
+        else if (typeParameterClass.equals(Position.class))
+            deletePosition(selectedEntity);
+        else if (typeParameterClass.equals(Regime.class))
+            deleteRegime(selectedEntity);
     }
 
     private void deleteStudents(ObservableList<T> selectedEntity) {
         StudentManager studentManager = new StudentManager();
         selectedEntity.forEach((student) -> {
-            studentManager.deleteStudent((Student) student);
+            studentManager.delete((Student) student);
         });
     }
 
     private void deleteTeachers(ObservableList<T> selectedEntity) {
         TeacherManager teacherManager = new TeacherManager();
         selectedEntity.forEach((teacher) -> {
-            teacherManager.deleteTeacher((Teacher) teacher);
+            teacherManager.delete((Teacher) teacher);
         });
     }
 
     private void deleteGroupType(ObservableList<T> selectedEntity) {
         GroupTypeManager gtm = new GroupTypeManager();
         selectedEntity.forEach((gt) -> {
-            gtm.deleteGroupType((GroupType) gt);
+            gtm.delete((GroupType) gt);
+        });
+    }
+
+    private void deleteGroupDOO(ObservableList<T> selectedEntity) {
+        GroupDOOManager gtm = new GroupDOOManager();
+        selectedEntity.forEach((gt) -> {
+            gtm.delete((GroupDOO) gt);
+        });
+    }
+
+    private void deleteLesson(ObservableList<T> selectedEntity) {
+        LessonManager gtm = new LessonManager();
+        selectedEntity.forEach((gt) -> {
+            gtm.delete((Lesson) gt);
+        });
+    }
+
+    private void deletePosition(ObservableList<T> selectedEntity) {
+        PositionManager gtm = new PositionManager();
+        selectedEntity.forEach((gt) -> {
+            gtm.delete((Position) gt);
+        });
+    }
+
+    private void deleteRegime(ObservableList<T> selectedEntity) {
+        RegimeManager gtm = new RegimeManager();
+        selectedEntity.forEach((gt) -> {
+            gtm.delete((Regime) gt);
         });
     }
     //---------------------------
@@ -295,8 +323,10 @@ public class DictionaryListFormController<T> {
     private void loadDataInTableView() {
 
         setEntityList();
-        if (dataList.size() == 0)
+        if (dataList.size() == 0) {
+            mainTable.getItems().clear();
             return;
+        }
 
         mainTable.setItems(dataList);
         if (dataList.size() > 0) {
@@ -323,13 +353,21 @@ public class DictionaryListFormController<T> {
             dataList = (ObservableList<T>) getTeacherList();
         else if (typeParameterClass.equals(GroupType.class))
             dataList = (ObservableList<T>) getGroupTypeList();
+        else if (typeParameterClass.equals(GroupDOO.class))
+            dataList = (ObservableList<T>) getGroupDOOList();
+        else if (typeParameterClass.equals(Lesson.class))
+            dataList = (ObservableList<T>) getLessonList();
+        else if (typeParameterClass.equals(Position.class))
+            dataList = (ObservableList<T>) getPositionList();
+        else if (typeParameterClass.equals(Regime.class))
+            dataList = (ObservableList<T>) getRegimeList();
     }
 
     private ObservableList<Student> getStudentList() {
 
         StudentManager studentManager = new StudentManager();
         ObservableList<Student> studentList = FXCollections.observableArrayList();
-        List<Student> stList = studentManager.getAllStudent();
+        List<Student> stList = studentManager.getAll();
 
         for (Student student : stList) {
             studentList.add(student);
@@ -342,7 +380,7 @@ public class DictionaryListFormController<T> {
 
         TeacherManager teacherManager = new TeacherManager();
         ObservableList<Teacher> teacherList = FXCollections.observableArrayList();
-        List<Teacher> tList = teacherManager.getAllTeacher();
+        List<Teacher> tList = teacherManager.getAll();
 
         for (Teacher teacher : tList) {
             teacherList.add(teacher);
@@ -355,9 +393,61 @@ public class DictionaryListFormController<T> {
 
         GroupTypeManager gtManager = new GroupTypeManager();
         ObservableList<GroupType> gtoList = FXCollections.observableArrayList();
-        List<GroupType> gtList = gtManager.getAllGroupType();
+        List<GroupType> gtList = gtManager.getAll();
 
         for (GroupType gt : gtList) {
+            gtoList.add(gt);
+        }
+
+        return gtoList;
+    }
+
+    private ObservableList<GroupDOO> getGroupDOOList() {
+
+        GroupDOOManager gtManager = new GroupDOOManager();
+        ObservableList<GroupDOO> gtoList = FXCollections.observableArrayList();
+        List<GroupDOO> gtList = gtManager.getAll();
+
+        for (GroupDOO gt : gtList) {
+            gtoList.add(gt);
+        }
+
+        return gtoList;
+    }
+
+    private ObservableList<Lesson> getLessonList() {
+
+        LessonManager gtManager = new LessonManager();
+        ObservableList<Lesson> gtoList = FXCollections.observableArrayList();
+        List<Lesson> gtList = gtManager.getAll();
+
+        for (Lesson gt : gtList) {
+            gtoList.add(gt);
+        }
+
+        return gtoList;
+    }
+
+    private ObservableList<Position> getPositionList() {
+
+        PositionManager gtManager = new PositionManager();
+        ObservableList<Position> gtoList = FXCollections.observableArrayList();
+        List<Position> gtList = gtManager.getAll();
+
+        for (Position gt : gtList) {
+            gtoList.add(gt);
+        }
+
+        return gtoList;
+    }
+
+    private ObservableList<Regime> getRegimeList() {
+
+        RegimeManager gtManager = new RegimeManager();
+        ObservableList<Regime> gtoList = FXCollections.observableArrayList();
+        List<Regime> gtList = gtManager.getAll();
+
+        for (Regime gt : gtList) {
             gtoList.add(gt);
         }
 
@@ -371,15 +461,25 @@ public class DictionaryListFormController<T> {
             return getIndexByStudent((Student) entity);
         else if (typeParameterClass.equals(Teacher.class))
             return getIndexByTeacher((Teacher) entity);
+        else if (typeParameterClass.equals(GroupType.class))
+            return getIndexByGroupType((GroupType) entity);
+        else if (typeParameterClass.equals(GroupDOO.class))
+            return getIndexByGroupDOO((GroupDOO) entity);
+        else if (typeParameterClass.equals(Lesson.class))
+            return getIndexByLesson((Lesson) entity);
+        else if (typeParameterClass.equals(Position.class))
+            return getIndexByPosition((Position) entity);
+        else if (typeParameterClass.equals(Regime.class))
+            return getIndexByRegime((Regime) entity);
 
         return -1;
     }
 
-    private Integer getIndexByStudent(Student student) {
+    private Integer getIndexByStudent(Student entity) {
         Integer index = 0;
-        Integer studentId = student.getId();
-        for (T st : dataList) {
-            if (((Student) st).getId() == studentId) {
+        Integer entityId = entity.getId();
+        for (T ent : dataList) {
+            if (((Student) ent).getId() == entityId) {
                 return index;
             }
             index++;
@@ -387,11 +487,71 @@ public class DictionaryListFormController<T> {
         return -1;
     }
 
-    private Integer getIndexByTeacher(Teacher teacher) {
+    private Integer getIndexByTeacher(Teacher entity) {
         Integer index = 0;
-        Integer teacherId = teacher.getId();
-        for (T st : dataList) {
-            if (((Teacher) st).getId() == teacherId) {
+        Integer entityId = entity.getId();
+        for (T ent : dataList) {
+            if (((Teacher) ent).getId() == entityId) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    private Integer getIndexByGroupType(GroupType entity) {
+        Integer index = 0;
+        Integer entityId = entity.getId();
+        for (T ent : dataList) {
+            if (((GroupType) ent).getId() == entityId) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    private Integer getIndexByGroupDOO(GroupDOO entity) {
+        Integer index = 0;
+        Integer entityId = entity.getId();
+        for (T ent : dataList) {
+            if (((GroupDOO) ent).getId() == entityId) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    private Integer getIndexByLesson(Lesson entity) {
+        Integer index = 0;
+        Integer entityId = entity.getId();
+        for (T ent : dataList) {
+            if (((Lesson) ent).getId() == entityId) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    private Integer getIndexByPosition(Position entity) {
+        Integer index = 0;
+        Integer entityId = entity.getId();
+        for (T ent : dataList) {
+            if (((Position) ent).getId() == entityId) {
+                return index;
+            }
+            index++;
+        }
+        return -1;
+    }
+
+    private Integer getIndexByRegime(Regime entity) {
+        Integer index = 0;
+        Integer entityId = entity.getId();
+        for (T ent : dataList) {
+            if (((Regime) ent).getId() == entityId) {
                 return index;
             }
             index++;
@@ -407,6 +567,18 @@ public class DictionaryListFormController<T> {
         if (id != null)
             id.setVisible(false);
 
+        TreeMap<String, String> fieldTM = Config.getVisibleFields();
+        for (Map.Entry e : fieldTM.entrySet()) {
+            if (e.getKey().toString().contains("createDate")
+                || e.getKey().toString().contains("birthDate"))
+                continue;
+
+            TableColumn field = findColumnByName(e.getKey().toString());
+            if (field != null)
+                field.prefWidthProperty().bind(dictionaryMain.widthProperty().divide(4.0));
+        }
+
+        /*
         TableColumn firstName = findColumnByName("firstName");
         if (firstName != null)
             firstName.prefWidthProperty().bind(dictionaryMain.widthProperty().divide(5.0));
@@ -418,6 +590,7 @@ public class DictionaryListFormController<T> {
         TableColumn lastName = findColumnByName("lastName");
         if (lastName != null)
             lastName.prefWidthProperty().bind(dictionaryMain.widthProperty().divide(5.0));
+        */
 
         TableColumn createDate = findColumnByName("createDate");
         // set column createDate date format
@@ -450,7 +623,7 @@ public class DictionaryListFormController<T> {
         TableColumn birthDate = findColumnByName("birthDate");
         // set column birthDate date format
         if (birthDate != null) {
-            birthDate.setPrefWidth(80);
+            birthDate.setPrefWidth(80.0);
             birthDate.setCellFactory(column -> {
                 TableCell<T, String> cell = new TableCell<>() {
                     private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");

@@ -1,37 +1,22 @@
 package com.hibernate.crud.operations;
 
-import com.hibernate.crud.operations.dao.GroupTypeDAO;
-import com.hibernate.crud.operations.dao.StudentDAO;
-import com.hibernate.crud.operations.idao.IGroupTypeDAO;
-import com.hibernate.crud.operations.idao.IGroupTypeManager;
-import com.hibernate.crud.operations.idao.IStudentDAO;
-import com.hibernate.crud.operations.idao.IStudentManger;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.hibernate.crud.operations.dao.UserDAO;
+import com.hibernate.crud.operations.idao.IUserDAO;
+import com.hibernate.crud.operations.idao.IUserManager;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
-import org.russianfeature.model.GroupType;
-import org.russianfeature.model.Student;
-import org.russianfeature.model.StudentLoadInfo;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import org.russianfeature.model.User;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
-public class GroupTypeManager implements IGroupTypeManager {
-    private IGroupTypeDAO groupTypeDAO = new GroupTypeDAO();
+public class UserManager implements IUserManager {
+    private IUserDAO userDAO = new UserDAO();
     @Override
-    public GroupType findByName(String name) {
-        GroupType gt = null;
+    public User findByName(String name) {
+        User gt = null;
         try {
             HibernateUtil.beginTransaction();
-            gt = groupTypeDAO.findByName(name);
+            gt = userDAO.findByName(name);
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
             System.out.println("Query returned more than one results.");
@@ -42,10 +27,10 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public void delete(GroupType gt) {
+    public void delete(User gt) {
         try {
             HibernateUtil.beginTransaction();
-            groupTypeDAO.delete(gt);
+            userDAO.delete(gt);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -54,11 +39,11 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public List<GroupType> getAll() {
-        List<GroupType> gtList = new ArrayList<GroupType>();
+    public List<User> getAll() {
+        List<User> gtList = new ArrayList<>();
         try {
             HibernateUtil.beginTransaction();
-            gtList = groupTypeDAO.findAll(GroupType.class);
+            gtList = userDAO.findAll(User.class);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -67,11 +52,11 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public GroupType findById(int id) {
-        GroupType gt = null;
+    public User findById(int id) {
+        User gt = null;
         try {
             HibernateUtil.beginTransaction();
-            gt = groupTypeDAO.findByID(GroupType.class, id);
+            gt = userDAO.findByID(User.class, id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -80,10 +65,10 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public void save(GroupType gt) {
+    public void save(User gt) {
         try {
             HibernateUtil.beginTransaction();
-            groupTypeDAO.save(gt);
+            userDAO.save(gt);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             //System.out.println(ex);
@@ -93,10 +78,10 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public void create(GroupType gt) {
+    public void create(User gt) {
         try {
             HibernateUtil.beginTransaction();
-            groupTypeDAO.create(gt);
+            userDAO.create(gt);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -104,18 +89,19 @@ public class GroupTypeManager implements IGroupTypeManager {
         }
     }
 
+    /*
     @Override
-    public List<GroupType> getDoubles(Map<String, String> params) {
-        List<GroupType> gtList = new ArrayList<>();
+    public List<Lesson> getDoubles(Map<String, String> params) {
+        List<Lesson> gtList = new ArrayList<>();
         try {
             HibernateUtil.beginTransaction();
-            gtList = groupTypeDAO.getDoubles(params);
+            gtList = userDAO.getDoubles(params);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
         }
         return gtList;
     }
-
+    */
 
 }

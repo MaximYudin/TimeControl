@@ -123,7 +123,7 @@ public class StudentsListFormController<T> {
         if (selectedStudent.size() == 0) return;
         StudentManager studentManager = new StudentManager();
         selectedStudent.forEach((student) -> {
-            studentManager.deleteStudent(student);
+            studentManager.delete(student);
         });
 
         loadDataInTableView();
@@ -403,7 +403,7 @@ public class StudentsListFormController<T> {
 
         StudentManager studentManager = new StudentManager();
         ObservableList<Student> studentList = FXCollections.observableArrayList();
-        List<Student> stList = studentManager.getAllStudent();
+        List<Student> stList = studentManager.getAll();
 
         for (Student student : stList) {
             studentList.add(student);

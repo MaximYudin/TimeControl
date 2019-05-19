@@ -25,8 +25,13 @@
 
         <!-- Mapping With Model Class Containing Annotations
         <mapping class="org.russianfeature.model.Student" />-->
-        <mapping resource="/student.hbm.xml"/>
-        <mapping resource="/teacher.hbm.xml"/>
-        <mapping resource="/groupType.hbm.xml"/>
+        <mapping resource="/hibernate.hbm/student.hbm.xml"/>
+        <mapping resource="/hibernate.hbm/teacher.hbm.xml"/>
+        <mapping resource="/hibernate.hbm/groupType.hbm.xml"/>
+        <mapping resource="/hibernate.hbm/groupDOO.hbm.xml"/>
+        <mapping resource="/hibernate.hbm/regime.hbm.xml"/>
+        <mapping resource="/hibernate.hbm/position.hbm.xml"/>
+        <mapping resource="/hibernate.hbm/lesson.hbm.xml"/>
+        <mapping resource="/hibernate.hbm/user.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

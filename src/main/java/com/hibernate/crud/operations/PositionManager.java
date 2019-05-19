@@ -1,37 +1,28 @@
 package com.hibernate.crud.operations;
 
-import com.hibernate.crud.operations.dao.GroupTypeDAO;
-import com.hibernate.crud.operations.dao.StudentDAO;
-import com.hibernate.crud.operations.idao.IGroupTypeDAO;
-import com.hibernate.crud.operations.idao.IGroupTypeManager;
-import com.hibernate.crud.operations.idao.IStudentDAO;
-import com.hibernate.crud.operations.idao.IStudentManger;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.hibernate.crud.operations.dao.PositionDAO;
+import com.hibernate.crud.operations.dao.RegimeDAO;
+import com.hibernate.crud.operations.idao.IPositionDAO;
+import com.hibernate.crud.operations.idao.IPositionManager;
+import com.hibernate.crud.operations.idao.IRegimeDAO;
+import com.hibernate.crud.operations.idao.IRegimeManager;
 import org.hibernate.HibernateException;
 import org.hibernate.NonUniqueResultException;
-import org.hibernate.Session;
-import org.hibernate.query.Query;
-import org.russianfeature.model.GroupType;
-import org.russianfeature.model.Student;
-import org.russianfeature.model.StudentLoadInfo;
+import org.russianfeature.model.Position;
+import org.russianfeature.model.Regime;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class GroupTypeManager implements IGroupTypeManager {
-    private IGroupTypeDAO groupTypeDAO = new GroupTypeDAO();
+public class PositionManager implements IPositionManager {
+    private IPositionDAO positionDAO = new PositionDAO();
     @Override
-    public GroupType findByName(String name) {
-        GroupType gt = null;
+    public Position findByName(String name) {
+        Position gt = null;
         try {
             HibernateUtil.beginTransaction();
-            gt = groupTypeDAO.findByName(name);
+            gt = positionDAO.findByName(name);
             HibernateUtil.commitTransaction();
         } catch (NonUniqueResultException ex) {
             System.out.println("Query returned more than one results.");
@@ -42,10 +33,10 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public void delete(GroupType gt) {
+    public void delete(Position gt) {
         try {
             HibernateUtil.beginTransaction();
-            groupTypeDAO.delete(gt);
+            positionDAO.delete(gt);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -54,11 +45,11 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public List<GroupType> getAll() {
-        List<GroupType> gtList = new ArrayList<GroupType>();
+    public List<Position> getAll() {
+        List<Position> gtList = new ArrayList<>();
         try {
             HibernateUtil.beginTransaction();
-            gtList = groupTypeDAO.findAll(GroupType.class);
+            gtList = positionDAO.findAll(Regime.class);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -67,11 +58,11 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public GroupType findById(int id) {
-        GroupType gt = null;
+    public Position findById(int id) {
+        Position gt = null;
         try {
             HibernateUtil.beginTransaction();
-            gt = groupTypeDAO.findByID(GroupType.class, id);
+            gt = positionDAO.findByID(Regime.class, id);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -80,10 +71,10 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public void save(GroupType gt) {
+    public void save(Position gt) {
         try {
             HibernateUtil.beginTransaction();
-            groupTypeDAO.save(gt);
+            positionDAO.save(gt);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             //System.out.println(ex);
@@ -93,10 +84,10 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public void create(GroupType gt) {
+    public void create(Position gt) {
         try {
             HibernateUtil.beginTransaction();
-            groupTypeDAO.create(gt);
+            positionDAO.create(gt);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);
@@ -105,11 +96,11 @@ public class GroupTypeManager implements IGroupTypeManager {
     }
 
     @Override
-    public List<GroupType> getDoubles(Map<String, String> params) {
-        List<GroupType> gtList = new ArrayList<>();
+    public List<Position> getDoubles(Map<String, String> params) {
+        List<Position> gtList = new ArrayList<>();
         try {
             HibernateUtil.beginTransaction();
-            gtList = groupTypeDAO.getDoubles(params);
+            gtList = positionDAO.getDoubles(params);
             HibernateUtil.commitTransaction();
         } catch (HibernateException ex) {
             System.out.println(ex);

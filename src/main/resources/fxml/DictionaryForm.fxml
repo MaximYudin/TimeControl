@@ -19,17 +19,27 @@
                   <Font size="20.0" />
                </font>
             </Button>
-            <Button fx:id="btnLessons" mnemonicParsing="false" prefHeight="180.0" prefWidth="180.0" text="Должности">
+            <Button fx:id="btnLessons" mnemonicParsing="false" onAction="#btnLessonsOnClick" prefHeight="180.0" prefWidth="180.0" text="Предметы">
                <font>
                   <Font size="20.0" />
                </font>
             </Button>
-            <Button fx:id="btnGroups" mnemonicParsing="false" prefHeight="180.0" prefWidth="180.0" text="Группы">
+            <Button fx:id="btnGroups" mnemonicParsing="false" onAction="#btnGroupsOnClick" prefHeight="180.0" prefWidth="180.0" text="Группы">
                <font>
                   <Font size="20.0" />
                </font>
             </Button>
             <Button fx:id="btnGroupType" mnemonicParsing="false" onAction="#btnGroupTypeOnClick" prefHeight="180.0" prefWidth="180.0" text="Виды групп">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnRegime" mnemonicParsing="false" onAction="#btnRegimeOnClick" prefHeight="180.0" prefWidth="180.0" text="Режимные моменты дня" textAlignment="CENTER" wrapText="true">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnPosition" mnemonicParsing="false" onAction="#btnPositionOnClick" prefHeight="180.0" prefWidth="180.0" text="Должности" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="20.0" />
                </font>

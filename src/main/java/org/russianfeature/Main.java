@@ -1,6 +1,5 @@
 package org.russianfeature;
 
-import com.hibernate.crud.operations.UserManager;
 import com.utils.Config;
 import com.utils.EnumAction;
 import javafx.application.Application;
@@ -12,15 +11,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.util.Set;
 
 import org.russianfeature.controllers.*;
-import org.russianfeature.controllers.dictionary.DictionaryListFormController;
-import org.russianfeature.controllers.dictionary.StudentEditFormController;
-import org.russianfeature.controllers.dictionary.StudentsListFormController;
-import org.russianfeature.model.GroupDOO;
-import org.russianfeature.model.Student;
-import org.russianfeature.model.User;
+import org.russianfeature.controllers.dictionary.*;
+import org.russianfeature.model.*;
 
 
 public class Main extends Application {
@@ -31,6 +25,10 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
+
+        test();
+
+
 
         /*
             FXMLLoader loader = new FXMLLoader();
@@ -48,6 +46,8 @@ public class Main extends Application {
 
         */
 
+
+
         Config.setScreenProperty();
 
         this.primaryStage = primaryStage;
@@ -55,6 +55,95 @@ public class Main extends Application {
         initRoot();
 
         showMainWorkPlace();
+
+    }
+
+
+    public void test() {
+/*
+
+        GroupDOOManager gManager = new GroupDOOManager();
+        GroupDOO myGroup = new GroupDOO();
+        myGroup.setGroupName("flower");
+        myGroup.setCreateDate("01.01.2019");
+        myGroup.setLastEditDate("01.01.2019");
+        myGroup.setEditUserId(1);
+        gManager.save(myGroup);
+*/
+/*
+        GroupDOOManager gManager1 = new GroupDOOManager();
+        GroupDOO myGroup1 = gManager1.findById(1);
+        gManager1.delete(myGroup1);
+        int t = 0;
+
+
+        StudentManager stManager = new StudentManager();
+        Student student = new Student();
+        student.setFirstName("yudin");
+        student.setSecondName("maksim");
+        student.setLastName("vladimirovich");
+        student.setBirthDate("22.11.1986");
+        student.setCreateDate("11.11.2019");
+        student.setGroup(myGroup1);
+        stManager.save(student);
+        int y = 0;
+*/
+
+        /*CartManager cManger = new CartManager();
+        Cart cart  =  cManger.test(29);
+        //Cart cart  = cManger.findByIdCurrentSessionQuery(29);
+        //Cart cart  = cManger.findByIdOpenSession(29);
+        //Cart cart  = cManger.findById(29);
+        Set<CartDetail> cartDetail = cManger.getCartDetail(cart);
+        int i;
+        //Cart cart = new Cart();
+        //cart.setCartName("my test cart");
+        //cManger.save(cart);
+
+*//*
+        CartDetailManager cdManager = new CartDetailManager();
+        CartDetail cartDetailRecord = new CartDetail();
+        cartDetailRecord.setProductName("apple");
+        cartDetailRecord.setQty(10);
+        cartDetailRecord.setCart(cart);
+
+        //cart.getCartDetails().add(cartDetailRecord);
+
+        cdManager.save(cartDetailRecord);
+*//*
+        CartManager cManger1 = new CartManager();
+
+
+        //HibernateUtil.beginTransaction();
+        Cart cart1 = cManger1.findByIdOpenSession(cart.getCartId());
+        //Set<CartDetail> detail = cart1.getCartDetails();
+        //HibernateUtil.commitTransaction();
+
+        //Cart gt = null;
+        String sql = "select s from Cart s join fetch s.cartDetails where s.cartId = :cartId";
+        Query query = HibernateUtil.getSession().createQuery(sql).setParameter("cartId", 29);
+        Cart gt = (Cart) query.uniqueResult();
+        //gt = findOne(query);
+
+
+        int a = 1;
+       *//*
+        GroupDOOManager gManager = new GroupDOOManager();
+        GroupDOO group = new GroupDOO();
+
+        group.setCreateUser(user);
+        group.setGroupName("grp 1");
+        group.setCreateDate("21.11.2019");
+        group.setLastEditDate("21.11.2019");
+        group.setCreateUser(user);
+
+        //user.getGroupDOOSet().add(group);
+        gManager.save(group);
+*//*
+        //HibernateUtil.commitTransaction();
+*/
+
+
 
     }
 
@@ -71,6 +160,7 @@ public class Main extends Application {
 
             primaryStage.setTitle("Time control BEST");
             primaryStage.setScene(new Scene(root, Config.MAIN_FORM_WIDTH, Config.MAIN_FORM_HEIGHT));
+            primaryStage.setMaximized(true);
             primaryStage.show();
 
             MainFormController controller = loader.getController();
@@ -263,12 +353,13 @@ public class Main extends Application {
 
     }
 
+    // Show dictionaries list form
     public void showDictionaryStudentsMain() {
 
         try {
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/fxml/dictionary/StudentsListForm.fxml"));
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/StudentListControlForm.fxml"));
             AnchorPane workPlace = (AnchorPane) loader.load();
 
             if (isValidToShowWorkPlace(workPlace))
@@ -280,9 +371,11 @@ public class Main extends Application {
             currentWorkPlace = workPlace;
 
             // Bind controller and main app
-            StudentsListFormController controller = loader.getController();
+            StudentMainListFormController controller = loader.getController();
             controller.setMainApp(this);
-            controller.setPlaceProperty();
+            //controller.setPlaceProperty();
+            //controller.setTypeParameterClass(clazz);
+            controller.initForm();
 
 
         } catch (IOException e) {
@@ -291,12 +384,194 @@ public class Main extends Application {
 
     }
 
+    public void showDictionaryGroupMain() {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/GroupListControlForm.fxml"));
+            AnchorPane workPlace = (AnchorPane) loader.load();
+
+            if (isValidToShowWorkPlace(workPlace))
+                return;
+
+            root.getChildren().add(workPlace);
+            workPlace.setId("dictionaryGroupMain");
+
+            currentWorkPlace = workPlace;
+
+            // Bind controller and main app
+            GroupMainListFormController controller = loader.getController();
+            controller.setMainApp(this);
+            //controller.setPlaceProperty();
+            //controller.setTypeParameterClass(clazz);
+            controller.initForm();
+
+
+        } catch (IOException e) {
+            System.out.printf(e.toString());
+        }
+
+    }
+
+    public void showDictionaryTeacherMain() {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/TeacherListControlForm.fxml"));
+            AnchorPane workPlace = (AnchorPane) loader.load();
+
+            if (isValidToShowWorkPlace(workPlace))
+                return;
+
+            root.getChildren().add(workPlace);
+            workPlace.setId("dictionaryTeacherMain");
+
+            currentWorkPlace = workPlace;
+
+            // Bind controller and main app
+            TeacherMainListFormController controller = loader.getController();
+            controller.setMainApp(this);
+            //controller.setPlaceProperty();
+            //controller.setTypeParameterClass(clazz);
+            controller.initForm();
+
+
+        } catch (IOException e) {
+            System.out.printf(e.toString());
+        }
+
+    }
+
+    public void showDictionaryLessonMain() {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/LessonListControlForm.fxml"));
+            AnchorPane workPlace = (AnchorPane) loader.load();
+
+            if (isValidToShowWorkPlace(workPlace))
+                return;
+
+            root.getChildren().add(workPlace);
+            workPlace.setId("dictionaryLessonMain");
+
+            currentWorkPlace = workPlace;
+
+            // Bind controller and main app
+            LessonMainListFormController controller = loader.getController();
+            controller.setMainApp(this);
+            //controller.setPlaceProperty();
+            //controller.setTypeParameterClass(clazz);
+            controller.initForm();
+
+
+        } catch (IOException e) {
+            System.out.printf(e.toString());
+        }
+
+    }
+
+    public void showDictionaryGroupTypeMain() {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/GroupTypeListControlForm.fxml"));
+            AnchorPane workPlace = (AnchorPane) loader.load();
+
+            if (isValidToShowWorkPlace(workPlace))
+                return;
+
+            root.getChildren().add(workPlace);
+            workPlace.setId("dictionaryLessonMain");
+
+            currentWorkPlace = workPlace;
+
+            // Bind controller and main app
+            GroupTypeMainListFormController controller = loader.getController();
+            controller.setMainApp(this);
+            //controller.setPlaceProperty();
+            //controller.setTypeParameterClass(clazz);
+            controller.initForm();
+
+
+        } catch (IOException e) {
+            System.out.printf(e.toString());
+        }
+
+    }
+
+    public void showDictionaryPositionMain() {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/PositionListControlForm.fxml"));
+            AnchorPane workPlace = (AnchorPane) loader.load();
+
+            if (isValidToShowWorkPlace(workPlace))
+                return;
+
+            root.getChildren().add(workPlace);
+            workPlace.setId("dictionaryPositionMain");
+
+            currentWorkPlace = workPlace;
+
+            // Bind controller and main app
+            PositionMainListFormController controller = loader.getController();
+            controller.setMainApp(this);
+            //controller.setPlaceProperty();
+            //controller.setTypeParameterClass(clazz);
+            controller.initForm();
+
+
+        } catch (IOException e) {
+            System.out.printf(e.toString());
+        }
+
+    }
+
+    public void showDictionaryRegimeMain() {
+
+        try {
+
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/RegimeListControlForm.fxml"));
+            AnchorPane workPlace = (AnchorPane) loader.load();
+
+            if (isValidToShowWorkPlace(workPlace))
+                return;
+
+            root.getChildren().add(workPlace);
+            workPlace.setId("dictionaryPositionMain");
+
+            currentWorkPlace = workPlace;
+
+            // Bind controller and main app
+            RegimeMainListFormController controller = loader.getController();
+            controller.setMainApp(this);
+            //controller.setPlaceProperty();
+            //controller.setTypeParameterClass(clazz);
+            controller.initForm();
+
+
+        } catch (IOException e) {
+            System.out.printf(e.toString());
+        }
+
+    }
+
+
+
     public void showDictionaryMain(Class clazz) {
 
         try {
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/fxml/dictionary/DictionaryListForm.fxml"));
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/_kDictionaryListControlForm.fxml"));
 
             AnchorPane workPlace = (AnchorPane) loader.load();
 
@@ -309,7 +584,7 @@ public class Main extends Application {
             currentWorkPlace = workPlace;
 
             //DictionaryListFormController<Teacher> controller = new DictionaryListFormController<>();
-            DictionaryListFormController controller = loader.getController();
+            _DictionaryMainListFormController controller = loader.getController();
             controller.setMainApp(this);
             //controller.setTypeParameterClass(Teacher.class);
             controller.setTypeParameterClass(clazz);
@@ -322,46 +597,7 @@ public class Main extends Application {
         } catch (IOException e) {
             System.out.printf(e.toString());
         }
-        /*
-        if (clazz.equals(Teacher.class))
-            showDictionaryTeacherMain();
-        else if (clazz.equals(Student.class))
-        */
 
-
-    }
-
-    public void showDictionaryTeacherMain() {
-        try {
-
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/fxml/dictionary/DictionaryListForm.fxml"));
-
-            AnchorPane workPlace = (AnchorPane) loader.load();
-
-            if (isValidToShowWorkPlace(workPlace))
-                return;
-
-            root.getChildren().add(workPlace);
-            workPlace.setId("dictionaryMain");
-
-            currentWorkPlace = workPlace;
-
-            //DictionaryListFormController<Teacher> dicControl = loader.getController();
-            //DictionaryListFormController<Teacher> dicControl = new DictionaryListFormController<>();
-            DictionaryListFormController controller = loader.getController();
-            controller.setMainApp(this);
-            //controller.setTypeParameterClass(Teacher.class);
-            controller.setTypeParameterClass(Student.class);
-            controller.initForm();
-            //controller.setPlaceProperty();
-
-            // Bind controller and main app
-
-
-        } catch (IOException e) {
-            System.out.printf(e.toString());
-        }
     }
 
     public void showDictionaryStudentsAction(EnumAction action) {
@@ -371,13 +607,13 @@ public class Main extends Application {
             Stage studentDialogAction = new Stage();
 
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("/fxml/dictionary/StudentEditForm.fxml"));
+            loader.setLocation(Main.class.getResource("/fxml/dictionary/_StudentEditForm.fxml"));
             AnchorPane studentAction = loader.load();
 
             studentAction.setId("dictionaryStudentsFormAction");
 
             // Bind controller and main app
-            StudentEditFormController controller = loader.getController();
+            _StudentEditFormController controller = loader.getController();
             controller.setMainApp(this);
             controller.setStage(studentDialogAction);
             controller.setAction(action);

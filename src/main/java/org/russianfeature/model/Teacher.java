@@ -38,7 +38,7 @@ public class Teacher implements Serializable {
     }
 
     @Id
-    @Column(name = "id")
+    @Column(name = "id", unique=true, nullable=false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id.get();

@@ -1,8 +1,15 @@
 package com.hibernate.crud.operations;
 
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
+import org.hibernate.boot.Metadata;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.SessionFactory;
+
+import java.util.List;
 
 public class HibernateUtil {
 
@@ -12,7 +19,14 @@ public class HibernateUtil {
         try {
             // Create the SessionFactory from standard (hibernate.cfg.xml)
             // config file.
-            sessionFactory = new Configuration().configure().buildSessionFactory();
+            //sessionFactory = new Configuration().configure().buildSessionFactory();
+
+            StandardServiceRegistry standardRegistry =
+                    new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();
+            Metadata metaData =
+                    new MetadataSources(standardRegistry).getMetadataBuilder().build();
+            sessionFactory = metaData.getSessionFactoryBuilder().build();
+            int i;
         } catch (Throwable ex) {
             // Log the exception.
             System.err.println("Initial SessionFactory creation failed." + ex);
@@ -23,6 +37,11 @@ public class HibernateUtil {
     public static Session getSession() {
         return sessionFactory.getCurrentSession();
         //return sessionFactory.openSession();
+    }
+
+    public static Session getOpenSession() {
+        //return sessionFactory.getCurrentSession();
+        return sessionFactory.openSession();
     }
 
     public static SessionFactory getSessionFactory() {

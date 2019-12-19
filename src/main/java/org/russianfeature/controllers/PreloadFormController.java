@@ -1,7 +1,7 @@
 package org.russianfeature.controllers;
 
-import com.hibernate.crud.operations.StudentManager;
-import com.hibernate.crud.operations.TeacherManager;
+import com.hibernate.crud.operations.manager.StudentManager;
+import com.hibernate.crud.operations.manager.TeacherManager;
 import com.utils.CommonUtil;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;

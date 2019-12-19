@@ -7,6 +7,8 @@ import javafx.beans.property.StringProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 //import javax.persistence.Access;
 //import javax.persistence.AccessType;
 
@@ -24,6 +26,8 @@ public class GroupType implements Serializable {
     private StringProperty lastEditDate;
     private IntegerProperty lastEditUserId;
 
+    private Set<GroupDOO> groups = new HashSet<>();
+
     public GroupType() {
         this.id = new SimpleIntegerProperty();
         this.createDate = new SimpleStringProperty("");
@@ -36,6 +40,8 @@ public class GroupType implements Serializable {
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique=true, nullable=false)
     public Integer getId() {
         return id.get();
     }
@@ -139,6 +145,14 @@ public class GroupType implements Serializable {
         this.lastEditUserId.set(id);
     }
 
+    @OneToMany(mappedBy = "groupType", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    public Set<GroupDOO> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(Set<GroupDOO> groups) {
+        this.groups = groups;
+    }
 }
 
 

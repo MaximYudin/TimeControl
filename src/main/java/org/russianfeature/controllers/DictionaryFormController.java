@@ -47,7 +47,7 @@ public class DictionaryFormController {
     void btnStudentOnClick(ActionEvent event) {
         mainApp.removeWorkPlace("dictionaryStudentsMain");
 
-        mainApp.showDictionaryMain(Student.class);
+        mainApp.showDictionaryStudentsMain();
 
         Node lbl = mainApp.getRoot().lookup("#programCaption");
         if (lbl != null)
@@ -58,7 +58,7 @@ public class DictionaryFormController {
     void btnTeacherOnClick(ActionEvent event) {
         mainApp.removeWorkPlace("dictionaryTeacherMain");
 
-        mainApp.showDictionaryMain(Teacher.class);
+        mainApp.showDictionaryTeacherMain();
 
         Node lbl = mainApp.getRoot().lookup("#programCaption");
         if (lbl != null)
@@ -69,7 +69,7 @@ public class DictionaryFormController {
     void btnGroupTypeOnClick(ActionEvent event) {
         mainApp.removeWorkPlace("dictionaryGroupTypeMain");
 
-        mainApp.showDictionaryMain(GroupType.class);
+        mainApp.showDictionaryGroupTypeMain();
 
         Node lbl = mainApp.getRoot().lookup("#programCaption");
         if (lbl != null)
@@ -81,7 +81,7 @@ public class DictionaryFormController {
     void btnGroupsOnClick(ActionEvent event) {
         mainApp.removeWorkPlace("dictionaryGroupDOO");
 
-        mainApp.showDictionaryMain(GroupDOO.class);
+        mainApp.showDictionaryGroupMain();
 
         Node lbl = mainApp.getRoot().lookup("#programCaption");
         if (lbl != null)
@@ -92,7 +92,7 @@ public class DictionaryFormController {
     void btnLessonsOnClick(ActionEvent event) {
         mainApp.removeWorkPlace("dictionaryLesson");
 
-        mainApp.showDictionaryMain(Lesson.class);
+        mainApp.showDictionaryLessonMain();
 
         Node lbl = mainApp.getRoot().lookup("#programCaption");
         if (lbl != null)
@@ -103,7 +103,7 @@ public class DictionaryFormController {
     void btnRegimeOnClick(ActionEvent event) {
         mainApp.removeWorkPlace("dictionaryRegime");
 
-        mainApp.showDictionaryMain(Regime.class);
+        mainApp.showDictionaryRegimeMain();
 
         Node lbl = mainApp.getRoot().lookup("#programCaption");
         if (lbl != null)
@@ -114,7 +114,7 @@ public class DictionaryFormController {
     void btnPositionOnClick(ActionEvent event) {
         mainApp.removeWorkPlace("dictionaryPosition");
 
-        mainApp.showDictionaryMain(Position.class);
+        mainApp.showDictionaryPositionMain();
 
         Node lbl = mainApp.getRoot().lookup("#programCaption");
         if (lbl != null)
@@ -136,9 +136,9 @@ public class DictionaryFormController {
         AnchorPane.setLeftAnchor(dictionaryWorkPlace, (double) Config.BTN_MENU_WIDTH + 20);
         AnchorPane.setRightAnchor(dictionaryWorkPlace, 0.0);
 
-        List<String> btlNameList = Config.getDictionaryBtnName();
+        List<String> btтNameList = Config.getDictionaryBtnName();
         Button currentButton;
-        for (String btnName : btlNameList) {
+        for (String btnName : btтNameList) {
             Node node = dictionaryWorkPlace.lookup("#" + btnName);
             if (node != null) {
                 currentButton = (Button) node;

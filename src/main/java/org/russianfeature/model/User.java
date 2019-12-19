@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user")
+//@Table(name = "user")
 @Access(AccessType.PROPERTY)
 public class User implements Serializable {
 
@@ -22,10 +22,8 @@ public class User implements Serializable {
     private StringProperty createDate;
 
 
-    @OneToMany(fetch = FetchType.LAZY,
-            mappedBy = "user",
-            cascade = CascadeType.ALL)
-    private Set<GroupDOO> groupDOOSet = new HashSet<>();
+
+    private Set<GroupDOO> groupDOOSet = new HashSet<GroupDOO>();
 
     //@OneToMany(mappedBy = "editUserId", cascade = CascadeType.ALL, orphanRemoval = true)
     public Set<GroupDOO> getGroupDOO() {
@@ -104,6 +102,11 @@ public class User implements Serializable {
 
     public void setLastEditDate(String birthDate) {
         this.lastEditDate.set(birthDate);
+    }
+
+    @OneToMany(mappedBy = "createUser")
+    public Set<GroupDOO> getGroupDOOSet() {
+        return groupDOOSet;
     }
 
 }

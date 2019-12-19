@@ -13,6 +13,10 @@ public abstract class GenericDAO<T, ID extends Serializable> implements IGeneric
         return HibernateUtil.getSession();
     }
 
+    protected Session getOpenSession() {
+        return HibernateUtil.getOpenSession();
+    }
+
     public void save(T entity) {
         Session session = getSession();
         session.saveOrUpdate(entity);
@@ -48,6 +52,12 @@ public abstract class GenericDAO<T, ID extends Serializable> implements IGeneric
 
     public T findByID(Class clazz, int id) {
         Session session = getSession();
+        T t = (T) session.get(clazz, id);
+        return t;
+    }
+
+    public T findByIDOpenSession(Class clazz, int id) {
+        Session session = getOpenSession();
         T t = (T) session.get(clazz, id);
         return t;
     }

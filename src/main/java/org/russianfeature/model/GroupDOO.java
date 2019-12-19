@@ -7,6 +7,8 @@ import javafx.beans.property.StringProperty;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "groupDOO")
@@ -19,12 +21,11 @@ public class GroupDOO implements Serializable {
     private StringProperty comment;
     private StringProperty lastEditDate;
     private IntegerProperty editUserId;
+    private StringProperty groupTypeName;
 
+    private Set<Student> students = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name = "editUserId")
-    private User user;
-
+    private GroupType groupType;
 
     public GroupDOO() {
         this.id = new SimpleIntegerProperty();
@@ -33,9 +34,12 @@ public class GroupDOO implements Serializable {
         this.comment = new SimpleStringProperty("");
         this.lastEditDate = new SimpleStringProperty("");
         this.editUserId = new SimpleIntegerProperty();
+        this.groupTypeName = new SimpleStringProperty("");
     }
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique=true, nullable=false)
     public Integer getId() {
         return id.get();
     }
@@ -48,7 +52,7 @@ public class GroupDOO implements Serializable {
         this.id.set(id);
     }
 
-    @Column(name = "groupName")
+    @Column(name = "groupName", nullable = false)
     public String getGroupName() {
         return groupName.get();
     }
@@ -74,7 +78,7 @@ public class GroupDOO implements Serializable {
         this.comment.set(comment);
     }
 
-    @Column(name = "createDate")
+    @Column(name = "createDate", nullable = false)
     public String getCreateDate() {
         return createDate.get();
     }
@@ -87,7 +91,7 @@ public class GroupDOO implements Serializable {
         this.createDate.set(createDate);
     }
 
-    @Column(name = "lastEditDate")
+    @Column(name = "lastEditDate", nullable = false)
     public String getLastEditDate() {
         return lastEditDate.get();
     }
@@ -99,6 +103,7 @@ public class GroupDOO implements Serializable {
     public void setLastEditDate(String birthDate) {
         this.lastEditDate.set(birthDate);
     }
+
 
     @Column(name = "editUsetId")
     public int getEditUserId() {
@@ -113,14 +118,37 @@ public class GroupDOO implements Serializable {
         this.editUserId.set(editUserId);
     }
 
-    public User getUser() {
-        return user;
+    @OneToMany(mappedBy = "groupDOO", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    public Set<Student> getStudents() {
+        return students;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setStudents(Set<Student> students) {
+        this.students = students;
     }
 
+    @ManyToOne
+    @JoinColumn(name = "groupTypeId", nullable = false)
+    public GroupType getGroupType() {
+        return groupType;
+    }
+
+    public void setGroupType(GroupType groupType) {
+        this.groupType = groupType;
+    }
+
+    @Column(name = "groupTypeName", nullable = true)
+    public String getGroupTypeName() {
+        return groupTypeName.get();
+    }
+
+    public void setGroupTypeName(String gtName) {
+        groupTypeName.set(gtName);
+    }
+
+    public StringProperty groupTypeNameProperty() {
+        return groupTypeName;
+    }
 }
 
 

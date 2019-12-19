@@ -30,6 +30,8 @@ public class Lesson implements Serializable {
     }
 
     @Id
+    @Column(name = "id", unique=true, nullable=false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id.get();
     }

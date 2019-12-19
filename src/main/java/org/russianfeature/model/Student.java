@@ -21,6 +21,11 @@ public class Student implements Serializable {
     private StringProperty comment;
     private StringProperty createDate;
     private StringProperty birthDate;
+    private StringProperty lastEditDate;
+
+    private GroupDOO groupDOO;
+
+    private StringProperty groupName4Visual;
 
     public Student() {
         this.id = new SimpleIntegerProperty();
@@ -30,11 +35,13 @@ public class Student implements Serializable {
         this.comment = new SimpleStringProperty("");
         this.createDate = new SimpleStringProperty("");
         this.birthDate = new SimpleStringProperty("");
+        this.lastEditDate = new SimpleStringProperty("");
+        this.groupName4Visual = new SimpleStringProperty("");
     }
 
     @Id
-    //@Column(name = "id", unique = true, nullable = false)
-    //@GeneratedValue(strategy = GenerationType.TABLE, generator="native")
+    @Column(name = "id", unique = true, nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id.get();
     }
@@ -47,7 +54,7 @@ public class Student implements Serializable {
         this.id.set(id);
     }
 
-    @Column(name = "firstName")
+    @Column(name = "firstName", nullable = false)
     public String getFirstName() {
         return firstName.get();
     }
@@ -60,7 +67,7 @@ public class Student implements Serializable {
         this.firstName.set(firstName);
     }
 
-    @Column(name = "secondName")
+    @Column(name = "secondName", nullable = false)
     public String getSecondName() {
         return secondName.get();
     }
@@ -73,7 +80,7 @@ public class Student implements Serializable {
         this.secondName.set(secondName);
     }
 
-    @Column(name = "lastName")
+    @Column(name = "lastName", nullable = false)
     public String getLastName() {
         return lastName.get();
     }
@@ -99,7 +106,7 @@ public class Student implements Serializable {
         this.comment.set(comment);
     }
 
-    @Column(name = "createDate")
+    @Column(name = "createDate", nullable = false)
     public String getCreateDate() {
         return createDate.get();
     }
@@ -112,7 +119,7 @@ public class Student implements Serializable {
         this.createDate.set(createDate);
     }
 
-    @Column(name = "birthDate")
+    @Column(name = "birthDate", nullable = false)
     public String getBirthDate() {
         return birthDate.get();
     }
@@ -125,6 +132,41 @@ public class Student implements Serializable {
         this.birthDate.set(birthDate);
     }
 
+    @ManyToOne
+    @JoinColumn(name = "groupId", nullable = false)
+    public GroupDOO getGroupDOO() {
+        return groupDOO;
+    }
+
+    public void setGroupDOO(GroupDOO groupDOO) {
+        this.groupDOO = groupDOO;
+    }
+
+    @Column(name = "lastEditDate", nullable = false)
+    public String getLastEditDate() {
+        return lastEditDate.get();
+    }
+
+    public StringProperty lastEditDateProperty() {
+        return lastEditDate;
+    }
+
+    public void setLastEditDate(String lastEditDate) {
+        this.lastEditDate.set(lastEditDate);
+    }
+
+    @Column(name = "groupName4Visual", nullable = true)
+    public String getGroupName4Visual() {
+        return groupName4Visual.get();
+    }
+
+    public StringProperty groupName4VisualProperty() {
+        return groupName4Visual;
+    }
+
+    public void setGroupName4Visual(String groupName) {
+        this.groupName4Visual.set(groupName);
+    }
 }
 
 

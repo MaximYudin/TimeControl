@@ -1,6 +1,6 @@
 package org.russianfeature.controllers;
 
-import com.hibernate.crud.operations.StudentManager;
+import com.hibernate.crud.operations.manager.StudentManager;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
